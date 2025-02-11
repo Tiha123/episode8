@@ -33,6 +33,7 @@ public class TrackManager : MonoBehaviour
     void SpawnInitialTrack()
     {
         Vector3 pos = Vector3.zero;
+        pos.z-=trackThreshold;
         for (int i = 0; i < TrackCount; ++i)
         {
             Track temp = SpawnNextTrack(pos);
@@ -60,7 +61,7 @@ public class TrackManager : MonoBehaviour
         {
             return;
         }
-        if (TrackList[0].ExitPoint.position.z < camTransform.position.z - trackThreshold)
+        if (TrackList[0].EntryPoint.position.z < camTransform.position.z - trackThreshold)
         {
             Destroy(TrackList[0].gameObject);
             TrackList.RemoveAt(0);
