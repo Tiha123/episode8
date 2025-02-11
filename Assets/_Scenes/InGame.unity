@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackPrefab: {fileID: 2576529578525176618, guid: 98b3bc825e3942b4db36f59b4313d22f, type: 3}
   scrollspeed: 10
-  TrackCount: 6
+  TrackCount: 100
   trackThreshold: 0
 --- !u!4 &112241888
 Transform:
