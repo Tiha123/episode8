@@ -5,6 +5,7 @@ public class TrackManager : MonoBehaviour
 {
 
     [SerializeField] Track TrackPrefab;
+    [SerializeField] PlayerControl PlayerPrefab;
 
     private List<Track> TrackList = new List<Track>();
 
@@ -18,10 +19,13 @@ public class TrackManager : MonoBehaviour
 
     Transform camTransform;
 
+    public List<Transform> laneList;
+
     void Start()
     {
         camTransform = Camera.main.transform;
         SpawnInitialTrack();
+        SpawnPlayer();
     }
 
     void Update()
@@ -32,7 +36,7 @@ public class TrackManager : MonoBehaviour
 
     void SpawnInitialTrack()
     {
-        Vector3 pos = new Vector3(0f,0f,camTransform.position.z);
+        Vector3 pos = new Vector3(0f, 0f, camTransform.position.z);
         for (int i = 0; i < TrackCount; ++i)
         {
             Track temp = SpawnNextTrack(pos);
@@ -64,7 +68,7 @@ public class TrackManager : MonoBehaviour
         {
             Destroy(TrackList[0].gameObject);
             TrackList.RemoveAt(0);
-            Track lastTrack=TrackList[TrackList.Count - 1];
+            Track lastTrack = TrackList[TrackList.Count - 1];
             SpawnNextTrack(lastTrack.ExitPoint.position);
         }
     }
@@ -76,6 +80,13 @@ public class TrackManager : MonoBehaviour
         temp.trackmgr = this;
         TrackList.Add(temp);
         temp.name = $"Track_{nameindex}";
+        laneList = temp.Lanes;
         return temp;
+    }
+
+    void SpawnPlayer()
+    {
+        PlayerControl temp = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity, transform);
+        temp.trackmgr = this;
     }
 }

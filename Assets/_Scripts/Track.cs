@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Track : MonoBehaviour
 {
-    [HideInInspector] public Transform EntryPoint;
-    [HideInInspector] public Transform ExitPoint;
+    public Transform EntryPoint;
+    public Transform ExitPoint;
+    public List<Transform> Lanes=new List<Transform>();
 
     [HideInInspector] public TrackManager trackmgr;
 
