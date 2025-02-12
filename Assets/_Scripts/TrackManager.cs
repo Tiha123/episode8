@@ -32,8 +32,7 @@ public class TrackManager : MonoBehaviour
 
     void SpawnInitialTrack()
     {
-        Vector3 pos = Vector3.zero;
-        pos.z-=trackThreshold;
+        Vector3 pos = new Vector3(0f,0f,camTransform.position.z);
         for (int i = 0; i < TrackCount; ++i)
         {
             Track temp = SpawnNextTrack(pos);
