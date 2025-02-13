@@ -1,19 +1,23 @@
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
 
-    [SerializeField] float speed = 25f;
-    [SerializeField] AnimationCurve jumpCurve;
+    [SerializeField] float moveDuration = 0.5f;
+    // [SerializeField] AnimationCurve jumpCurve;
     [SerializeField] float jumpHeight = 1.5f;
     [SerializeField] float jumpDuration = 0.5f;
+    [SerializeField] Ease moveEase;
+    [SerializeField] Ease jumpEase;
 
     bool isJump = false;
+    bool isMoving = false;
 
-    float jumpStartTime;
-    float elapsedTime;
-    float p;
+    // float jumpStartTime;
+    // float elapsedTime;
+    // float p;
 
     int currentLane;
     [HideInInspector] public TrackManager trackmgr;
@@ -24,25 +28,45 @@ public class PlayerControl : MonoBehaviour
         currentLane = trackmgr.laneList.Count / 2;
     }
 
+    // void Update()
+    // {
+    //     if (Input.GetButtonDown("Right") && isJump == false)
+    //     {
+    //         HandlePlayer(1);
+    //     }
+    //     else if (Input.GetButtonDown("Left") && isJump == false)
+    //     {
+    //         HandlePlayer(-1);
+    //     }
+
+    //     if (Input.GetButtonDown("Jump") && isJump == false)
+    //     {
+    //         jumpStartTime = Time.time;
+    //         isJump = true;
+    //     }
+    //     UpdateJump();
+    //     UpdatePosition();
+    //     //transform.position += Vector3.right*horz*Time.deltaTime*horzspeed;
+    // }
+
     void Update()
     {
-        if (Input.GetButtonDown("Right") && isJump == false)
+        if (Input.GetButton("Jump")&&isMoving==false&&isJump==false)
         {
-            HandlePlayer(1);
+            isJump = true;
+            HandleJump();
         }
-        else if (Input.GetButtonDown("Left") && isJump == false)
+        else if (Input.GetButton("Left")&&isMoving==false&&isJump==false)
         {
+            isMoving = true;
             HandlePlayer(-1);
         }
-
-        if (Input.GetButtonDown("Jump") && isJump == false)
+        else if (Input.GetButton("Right")&&isMoving==false&&isJump==false)
         {
-            jumpStartTime = Time.time;
-            isJump = true;
+            isMoving = true;
+            HandlePlayer(1);
         }
-        UpdateJump();
-        UpdatePosition();
-        //transform.position += Vector3.right*horz*Time.deltaTime*horzspeed;
+
     }
 
     void HandlePlayer(int direction)
@@ -50,27 +74,49 @@ public class PlayerControl : MonoBehaviour
         currentLane += direction;
         currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
         pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, transform.position.y, transform.position.z);
+
+        transform.DOMove(pos, moveDuration)
+            .SetEase(moveEase)
+            .OnComplete(() =>
+            {
+                isMoving = false;
+                isJump = false;
+            }
+                );
+
     }
 
-    void UpdatePosition()
+    void HandleJump()
     {
-        transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * speed);
+        transform.DOLocalJump(pos, jumpHeight, 1, jumpDuration)
+                .SetEase(jumpEase)
+                .OnComplete(() =>
+                {
+                    isMoving = false;
+                    isJump = false;
+                }
+                            );
     }
 
-    void UpdateJump()
-    {
-        if (isJump == true)
-        {
-            elapsedTime = Time.time - jumpStartTime;
-            p = Mathf.Clamp(elapsedTime / jumpDuration, 0f, 1f);
-            float heightnow = jumpHeight * jumpCurve.Evaluate(p);
-            pos.y = heightnow;
-        }
+    // void UpdatePosition()
+    // {
+    //     transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime);
+    // }
 
-        if (p >= 1f)
-        {
-            isJump = false;
-            pos.y = 0f;
-        }
-    }
+    // void UpdateJump()
+    // {
+    //     if (isJump == true)
+    //     {
+    //         elapsedTime = Time.time - jumpStartTime;
+    //         p = Mathf.Clamp(elapsedTime / jumpDuration, 0f, 1f);
+    //         float heightnow = jumpHeight * jumpCurve.Evaluate(p);
+    //         pos.y = heightnow;
+    //     }
+
+    //     if (p >= 1f)
+    //     {
+    //         isJump = false;
+    //         pos.y = 0f;
+    //     }
+    // }
 }
