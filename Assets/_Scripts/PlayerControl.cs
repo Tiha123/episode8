@@ -1,3 +1,4 @@
+using Deform;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
@@ -11,7 +12,9 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float jumpDuration = 0.5f;
     [SerializeField] Ease moveEase;
     [SerializeField] Ease jumpEase;
-
+    [SerializeField] Transform pivot;
+    [SerializeField] SquashAndStretchDeformer slideDeform;
+    [SerializeField] SquashAndStretchDeformer jumpDeform;
     bool isJump = false;
     bool isMoving = false;
 
@@ -51,6 +54,10 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
+        if(pivot==null)
+        {
+            return;
+        }
         if (Input.GetButton("Jump")&&isMoving==false&&isJump==false)
         {
             isJump = true;
@@ -73,9 +80,9 @@ public class PlayerControl : MonoBehaviour
     {
         currentLane += direction;
         currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
-        pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, transform.position.y, transform.position.z);
+        pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
 
-        transform.DOMove(pos, moveDuration)
+        pivot.DOMove(pos, moveDuration)
             .SetEase(moveEase)
             .OnComplete(() =>
             {
@@ -88,7 +95,7 @@ public class PlayerControl : MonoBehaviour
 
     void HandleJump()
     {
-        transform.DOLocalJump(pos, jumpHeight, 1, jumpDuration)
+        pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration)
                 .SetEase(jumpEase)
                 .OnComplete(() =>
                 {

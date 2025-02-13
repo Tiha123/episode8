@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1969184322360571316}
+  - {fileID: 4792517731512093696}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5052852221712448025
@@ -50,6 +50,7 @@ MonoBehaviour:
   jumpDuration: 0.5
   moveEase: 27
   jumpEase: 32
+  pivot: {fileID: 4792517731512093696}
   trackmgr: {fileID: 0}
 --- !u!1 &1215457266338268624
 GameObject:
@@ -81,7 +82,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7632672578919778201}
-  m_Father: {fileID: 7150689970940215213}
+  m_Father: {fileID: 4792517731512093696}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3985979266216173419
 GameObject:
@@ -94,6 +95,7 @@ GameObject:
   - component: {fileID: 8447596542210793258}
   - component: {fileID: 9186469258070635997}
   - component: {fileID: 7596200924172653046}
+  - component: {fileID: 6371056021114256456}
   m_Layer: 0
   m_Name: SM_Veh_Car_Small_Wheel_fr
   m_TagString: Untagged
@@ -123,7 +125,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3985979266216173419}
-  m_Mesh: {fileID: 4300004, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &7596200924172653046
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -169,6 +171,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6371056021114256456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3985979266216173419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85212d1b13358614ca54e74ba56f93ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignOriginalMeshOnDisable: 1
+  updateMode: 0
+  cullingMode: 1
+  stripMode: 1
+  normalsRecalculation: 0
+  boundsRecalculation: 0
+  colliderRecalculation: 0
+  meshCollider: {fileID: 0}
+  data:
+    OriginalMesh: {fileID: 4300004, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+    Target:
+      meshFilter: {fileID: 9186469258070635997}
+      skinnedMeshRenderer: {fileID: 0}
+    initialized: 1
+  deformerElements:
+  - component: {fileID: 0}
+    active: 1
+  - component: {fileID: 0}
+    active: 1
+  customBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!1 &4987443757736039422
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,6 +216,7 @@ GameObject:
   - component: {fileID: 2228167615272712013}
   - component: {fileID: 8805373447740588964}
   - component: {fileID: 1007572998868033824}
+  - component: {fileID: 2646739874896335846}
   m_Layer: 0
   m_Name: SM_Veh_Car_Small_Wheel_fl
   m_TagString: Untagged
@@ -209,7 +246,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4987443757736039422}
-  m_Mesh: {fileID: 4300008, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &1007572998868033824
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -255,6 +292,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2646739874896335846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4987443757736039422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85212d1b13358614ca54e74ba56f93ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignOriginalMeshOnDisable: 1
+  updateMode: 0
+  cullingMode: 1
+  stripMode: 1
+  normalsRecalculation: 0
+  boundsRecalculation: 0
+  colliderRecalculation: 0
+  meshCollider: {fileID: 0}
+  data:
+    OriginalMesh: {fileID: 4300008, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+    Target:
+      meshFilter: {fileID: 8805373447740588964}
+      skinnedMeshRenderer: {fileID: 0}
+    initialized: 1
+  deformerElements:
+  - component: {fileID: 0}
+    active: 1
+  - component: {fileID: 0}
+    active: 1
+  customBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!1 &6309874279729195263
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +337,7 @@ GameObject:
   - component: {fileID: 2447961075241819445}
   - component: {fileID: 1685359810446786002}
   - component: {fileID: 1352576435055512129}
+  - component: {fileID: 602620488262291419}
   m_Layer: 0
   m_Name: SM_Veh_Car_Small_Wheel_rr
   m_TagString: Untagged
@@ -295,7 +367,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6309874279729195263}
-  m_Mesh: {fileID: 4300002, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &1352576435055512129
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -341,6 +413,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &602620488262291419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6309874279729195263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85212d1b13358614ca54e74ba56f93ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignOriginalMeshOnDisable: 1
+  updateMode: 0
+  cullingMode: 1
+  stripMode: 1
+  normalsRecalculation: 0
+  boundsRecalculation: 0
+  colliderRecalculation: 0
+  meshCollider: {fileID: 0}
+  data:
+    OriginalMesh: {fileID: 4300002, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+    Target:
+      meshFilter: {fileID: 1685359810446786002}
+      skinnedMeshRenderer: {fileID: 0}
+    initialized: 1
+  deformerElements:
+  - component: {fileID: 0}
+    active: 1
+  - component: {fileID: 0}
+    active: 1
+  customBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!1 &6805449300230681103
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +458,7 @@ GameObject:
   - component: {fileID: 7632672578919778201}
   - component: {fileID: 666899780229900476}
   - component: {fileID: 1844584475805747051}
+  - component: {fileID: 1246418540158857901}
   m_Layer: 0
   m_Name: SM_Veh_Car_Small_01
   m_TagString: Untagged
@@ -368,7 +475,7 @@ Transform:
   m_GameObject: {fileID: 6805449300230681103}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.028, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -385,7 +492,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6805449300230681103}
-  m_Mesh: {fileID: 4300000, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &1844584475805747051
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -431,6 +538,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1246418540158857901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6805449300230681103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85212d1b13358614ca54e74ba56f93ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignOriginalMeshOnDisable: 1
+  updateMode: 0
+  cullingMode: 1
+  stripMode: 1
+  normalsRecalculation: 0
+  boundsRecalculation: 0
+  colliderRecalculation: 0
+  meshCollider: {fileID: 0}
+  data:
+    OriginalMesh: {fileID: 4300000, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+    Target:
+      meshFilter: {fileID: 666899780229900476}
+      skinnedMeshRenderer: {fileID: 0}
+    initialized: 1
+  deformerElements:
+  - component: {fileID: 0}
+    active: 1
+  - component: {fileID: 0}
+    active: 1
+  customBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!1 &7422599608279427172
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +583,7 @@ GameObject:
   - component: {fileID: 5848589201999967894}
   - component: {fileID: 3128656082095625440}
   - component: {fileID: 6801120214664197009}
+  - component: {fileID: 6537158767563759121}
   m_Layer: 0
   m_Name: SM_Veh_Car_Small_Wheel_rl
   m_TagString: Untagged
@@ -471,7 +613,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7422599608279427172}
-  m_Mesh: {fileID: 4300006, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &6801120214664197009
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -517,3 +659,69 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6537158767563759121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7422599608279427172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85212d1b13358614ca54e74ba56f93ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignOriginalMeshOnDisable: 1
+  updateMode: 0
+  cullingMode: 1
+  stripMode: 1
+  normalsRecalculation: 0
+  boundsRecalculation: 0
+  colliderRecalculation: 0
+  meshCollider: {fileID: 0}
+  data:
+    OriginalMesh: {fileID: 4300006, guid: 0d74216142539234ab12859b87a8b0e3, type: 3}
+    Target:
+      meshFilter: {fileID: 3128656082095625440}
+      skinnedMeshRenderer: {fileID: 0}
+    initialized: 1
+  deformerElements:
+  - component: {fileID: 0}
+    active: 1
+  - component: {fileID: 0}
+    active: 1
+  customBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.25, y: 0.25, z: 0.25}
+--- !u!1 &8507123314765878904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4792517731512093696}
+  m_Layer: 0
+  m_Name: Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4792517731512093696
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507123314765878904}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1969184322360571316}
+  m_Father: {fileID: 7150689970940215213}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
