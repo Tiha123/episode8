@@ -13,8 +13,10 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] Ease moveEase;
     [SerializeField] Ease jumpEase;
     [SerializeField] Transform pivot;
-    [SerializeField] SquashAndStretchDeformer slideDeform;
-    [SerializeField] SquashAndStretchDeformer jumpDeform;
+    [SerializeField] SquashAndStretchDeformer slideLeftDeform;
+    [SerializeField] SquashAndStretchDeformer slideRightDeform;
+    [SerializeField] SquashAndStretchDeformer jumpUpDeform;
+    [SerializeField] SquashAndStretchDeformer jumpDownDeform;
     bool isJump = false;
     bool isMoving = false;
 
@@ -23,6 +25,10 @@ public class PlayerControl : MonoBehaviour
     // float p;
 
     int currentLane;
+
+    private Sequence seqMove;
+    private Sequence seqJump;
+
     [HideInInspector] public TrackManager trackmgr;
     Vector3 pos;
 
@@ -54,55 +60,75 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        if(pivot==null)
+        if (pivot == null)
         {
             return;
         }
-        if (Input.GetButton("Jump")&&isMoving==false&&isJump==false)
+        if (Input.GetButtonDown("Jump"))
         {
-            isJump = true;
             HandleJump();
         }
-        else if (Input.GetButton("Left")&&isMoving==false&&isJump==false)
+        else if (Input.GetButtonDown("Left"))
         {
-            isMoving = true;
             HandlePlayer(-1);
         }
-        else if (Input.GetButton("Right")&&isMoving==false&&isJump==false)
+        else if (Input.GetButtonDown("Right"))
         {
-            isMoving = true;
             HandlePlayer(1);
         }
 
     }
 
+
     void HandlePlayer(int direction)
     {
+        if (isJump==true) return;
         currentLane += direction;
-        currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
-        pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
+        if (currentLane < 0 || currentLane > trackmgr.laneList.Count - 1)
+        {
+            currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
+            pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
+        }
+        else
+        {
+            isMoving = true;
 
-        pivot.DOMove(pos, moveDuration)
-            .SetEase(moveEase)
-            .OnComplete(() =>
+            var squash = direction switch
             {
-                isMoving = false;
-                isJump = false;
+                -1 => slideLeftDeform,
+                1 => slideRightDeform,
+                _ => null
+            };
+
+            if (seqMove != null)
+            {
+                seqMove.Kill(true);
             }
-                );
+
+            currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
+            pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
+            seqMove = DOTween.Sequence().OnComplete(() => squash.Factor = 0);
+            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => isMoving = false));
+            seqMove.Join(DOVirtual.Float(0f, 1f, moveDuration / 2, (v) => squash.Factor = v));
+            seqMove.Insert(moveDuration / 2, DOVirtual.Float(1f, 0f, moveDuration / 2, (v) => squash.Factor = v));
+        }
+
+
+
+
 
     }
 
     void HandleJump()
     {
-        pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration)
-                .SetEase(jumpEase)
-                .OnComplete(() =>
-                {
-                    isMoving = false;
-                    isJump = false;
-                }
-                            );
+        if (isJump==true||isMoving==true) return;
+        isJump = true;
+        seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
+        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase).OnComplete(() => isJump = false));
+        seqJump.Join(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
+        seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
+        seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
+        seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
     }
 
     // void UpdatePosition()
