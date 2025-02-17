@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Deform;
 using DG.Tweening;
 using Unity.Mathematics;
@@ -10,7 +12,7 @@ public class PlayerControl : MonoBehaviour
     // [SerializeField] AnimationCurve jumpCurve;
     [SerializeField] float jumpHeight = 1.5f;
     [SerializeField] float jumpDuration = 0.5f;
-    [SerializeField] float slideDuration=0.5f;
+    [SerializeField] float slideDuration = 0.5f;
     [SerializeField] Ease moveEase;
     [SerializeField] Ease jumpEase;
     [SerializeField] Transform pivot;
@@ -19,8 +21,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] SquashAndStretchDeformer jumpUpDeform;
     [SerializeField] SquashAndStretchDeformer jumpDownDeform;
     [SerializeField] SquashAndStretchDeformer slideDeform;
-    bool isVertical = false;
-    bool isMoving = false;
+    [SerializeField] List<Collider> Colliders; //0>기본, 1>슬라이드
 
     // float jumpStartTime;
     // float elapsedTime;
@@ -34,9 +35,18 @@ public class PlayerControl : MonoBehaviour
     [HideInInspector] public TrackManager trackmgr;
     Vector3 pos;
 
+    public enum PlayerState { Idle = 0, Move = 1, Jump = 2, Slide = 3};
+
+    public PlayerState state = PlayerState.Idle;
+
+    [SerializeField] Material CarMaterial;
+    int curveAmount;
+
     void Start()
     {
         currentLane = trackmgr.laneList.Count / 2;
+        curveAmount = Shader.PropertyToID("_CurveAmount");
+        SwitchSlide(state);
     }
 
     // void Update()
@@ -62,15 +72,19 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.IsPlaying == false)
+        {
+            return;
+        }
         if (pivot == null)
         {
             return;
         }
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButton("Jump"))
         {
             HandleJump();
         }
-        else if (Input.GetButtonDown("Slide"))
+        else if (Input.GetButton("Slide"))
         {
             HandleSlide();
         }
@@ -82,14 +96,13 @@ public class PlayerControl : MonoBehaviour
         {
             HandlePlayer(1);
         }
-        
-
+        BendCar();
     }
 
 
     void HandlePlayer(int direction)
     {
-        if (isVertical==true) return;
+        if (state == PlayerState.Jump || state == PlayerState.Slide) return;
         currentLane += direction;
         if (currentLane < 0 || currentLane > trackmgr.laneList.Count - 1)
         {
@@ -98,7 +111,7 @@ public class PlayerControl : MonoBehaviour
         }
         else
         {
-            isMoving = true;
+            state = PlayerState.Move;
 
             var squash = direction switch
             {
@@ -110,51 +123,74 @@ public class PlayerControl : MonoBehaviour
             if (seqMove != null)
             {
                 seqMove.Kill(true);
+                state = PlayerState.Move;
             }
 
             currentLane = math.clamp(currentLane, 0, trackmgr.laneList.Count - 1);
             pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
             seqMove = DOTween.Sequence().OnComplete(() => squash.Factor = 0);
-            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => isMoving = false));
+            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => state = PlayerState.Idle));
             seqMove.Join(DOVirtual.Float(0f, 1f, moveDuration / 2, (v) => squash.Factor = v));
             seqMove.Insert(moveDuration / 2, DOVirtual.Float(1f, 0f, moveDuration / 2, (v) => squash.Factor = v));
         }
-
-
-
-
-
     }
 
     void HandleJump()
     {
-        if (isVertical==true||isMoving==true) return;
-        isVertical = true;
-        if (seqJump != null)
-            {
-                seqJump.Kill(true);
-            }
+        if (state != PlayerState.Idle) return;
+        state = PlayerState.Jump;
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
-        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase).OnComplete(() => isVertical = false));
+        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase));
         seqJump.Join(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
         seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
+        seqJump.InsertCallback(jumpDuration*9/10, ()=>state = PlayerState.Idle);
     }
 
     void HandleSlide()
     {
-        if(isVertical==true||isMoving==true) return;
-        isVertical = true;
-        if (seqJump != null)
-            {
-                seqJump.Kill(true);
-            }
+        if (state != PlayerState.Idle) return;
+        state = PlayerState.Slide;
+        SwitchSlide(state);
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
         seqJump.Append(DOVirtual.Float(0f, -1f, slideDuration / 2, (v) => slideDeform.Factor = v));
-        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v).OnComplete(() => isVertical = false));
+        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v).OnComplete(() =>
+        {
+            SwitchSlide(state);
+        }));
+        seqJump.InsertCallback(slideDuration*9/10, ()=>state = PlayerState.Idle);
 
     }
+
+void SwitchSlide(PlayerState pState)
+    {
+        if ((int)pState > Colliders.Count - 1) return;
+        foreach (var v in Colliders)
+        {
+            v.gameObject.SetActive(false);
+        }
+        Colliders[(int)pState].gameObject.SetActive(true);
+    }
+
+    void BendCar()
+    {
+        float TrackCurveParamX = Mathf.Lerp(-trackmgr.CurveAmplitudeX, trackmgr.CurveAmplitudeX, Mathf.PerlinNoise1D(Time.time * trackmgr.CurveFrequencyX));
+        float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
+        CarMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other)
+        {
+            GameManager.IsPlaying=false;
+        }
+    }
+
+    
+
+    
 
     // void UpdatePosition()
     // {
