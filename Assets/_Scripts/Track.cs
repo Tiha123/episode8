@@ -6,6 +6,7 @@ public class Track : MonoBehaviour
     public Transform EntryPoint;
     public Transform ExitPoint;
     public List<Transform> Lanes=new List<Transform>();
+    
 
     [HideInInspector] public TrackManager trackmgr;
 

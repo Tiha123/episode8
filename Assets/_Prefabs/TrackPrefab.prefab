@@ -383,4 +383,5 @@ MonoBehaviour:
   - {fileID: 6368005921416374424}
   - {fileID: 5278139335900939871}
   - {fileID: 1072424947543524682}
+  TrackMaterial: {fileID: 2100000, guid: a08d9c24059b8354d95baf6bd1d19f41, type: 2}
   trackmgr: {fileID: 0}

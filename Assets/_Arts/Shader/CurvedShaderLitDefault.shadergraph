@@ -1871,10 +1871,10 @@
     "m_Guid": {
         "m_GuidSerialized": "00721541-c629-4948-9f48-d046cdfaad06"
     },
-    "m_Name": "Offset",
+    "m_Name": "CurveAmount",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Offset",
-    "m_DefaultReferenceName": "_Offset",
+    "m_RefNameGeneratedByDisplayName": "CurveAmount",
+    "m_DefaultReferenceName": "_CurveAmount",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -2645,7 +2645,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "94e6094081a44ee8bb2512167e1ef441",
     "m_Id": 0,
-    "m_DisplayName": "Offset",
+    "m_DisplayName": "CurveAmount",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -3541,8 +3541,8 @@
     "m_ObjectId": "e2d2da8506244eb7835b5af7dd6d28ff",
     "m_Title": "텍스처 및 컬러표현",
     "m_Position": {
-        "x": -1022.0,
-        "y": 321.0
+        "x": -1022.0001220703125,
+        "y": 321.0000305175781
     }
 }
 

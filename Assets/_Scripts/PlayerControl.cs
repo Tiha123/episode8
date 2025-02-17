@@ -10,14 +10,16 @@ public class PlayerControl : MonoBehaviour
     // [SerializeField] AnimationCurve jumpCurve;
     [SerializeField] float jumpHeight = 1.5f;
     [SerializeField] float jumpDuration = 0.5f;
+    [SerializeField] float slideDuration=0.5f;
     [SerializeField] Ease moveEase;
     [SerializeField] Ease jumpEase;
     [SerializeField] Transform pivot;
-    [SerializeField] SquashAndStretchDeformer slideLeftDeform;
+    [Space(20), SerializeField] SquashAndStretchDeformer slideLeftDeform;
     [SerializeField] SquashAndStretchDeformer slideRightDeform;
     [SerializeField] SquashAndStretchDeformer jumpUpDeform;
     [SerializeField] SquashAndStretchDeformer jumpDownDeform;
-    bool isJump = false;
+    [SerializeField] SquashAndStretchDeformer slideDeform;
+    bool isVertical = false;
     bool isMoving = false;
 
     // float jumpStartTime;
@@ -39,19 +41,19 @@ public class PlayerControl : MonoBehaviour
 
     // void Update()
     // {
-    //     if (Input.GetButtonDown("Right") && isJump == false)
+    //     if (Input.GetButtonDown("Right") && isVertical == false)
     //     {
     //         HandlePlayer(1);
     //     }
-    //     else if (Input.GetButtonDown("Left") && isJump == false)
+    //     else if (Input.GetButtonDown("Left") && isVertical == false)
     //     {
     //         HandlePlayer(-1);
     //     }
 
-    //     if (Input.GetButtonDown("Jump") && isJump == false)
+    //     if (Input.GetButtonDown("Jump") && isVertical == false)
     //     {
     //         jumpStartTime = Time.time;
-    //         isJump = true;
+    //         isVertical = true;
     //     }
     //     UpdateJump();
     //     UpdatePosition();
@@ -68,6 +70,10 @@ public class PlayerControl : MonoBehaviour
         {
             HandleJump();
         }
+        else if (Input.GetButtonDown("Slide"))
+        {
+            HandleSlide();
+        }
         else if (Input.GetButtonDown("Left"))
         {
             HandlePlayer(-1);
@@ -76,13 +82,14 @@ public class PlayerControl : MonoBehaviour
         {
             HandlePlayer(1);
         }
+        
 
     }
 
 
     void HandlePlayer(int direction)
     {
-        if (isJump==true) return;
+        if (isVertical==true) return;
         currentLane += direction;
         if (currentLane < 0 || currentLane > trackmgr.laneList.Count - 1)
         {
@@ -121,14 +128,32 @@ public class PlayerControl : MonoBehaviour
 
     void HandleJump()
     {
-        if (isJump==true||isMoving==true) return;
-        isJump = true;
+        if (isVertical==true||isMoving==true) return;
+        isVertical = true;
+        if (seqJump != null)
+            {
+                seqJump.Kill(true);
+            }
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
-        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase).OnComplete(() => isJump = false));
+        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase).OnComplete(() => isVertical = false));
         seqJump.Join(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
         seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
+    }
+
+    void HandleSlide()
+    {
+        if(isVertical==true||isMoving==true) return;
+        isVertical = true;
+        if (seqJump != null)
+            {
+                seqJump.Kill(true);
+            }
+        seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
+        seqJump.Append(DOVirtual.Float(0f, -1f, slideDuration / 2, (v) => slideDeform.Factor = v));
+        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v).OnComplete(() => isVertical = false));
+
     }
 
     // void UpdatePosition()
@@ -138,7 +163,7 @@ public class PlayerControl : MonoBehaviour
 
     // void UpdateJump()
     // {
-    //     if (isJump == true)
+    //     if (isVertical == true)
     //     {
     //         elapsedTime = Time.time - jumpStartTime;
     //         p = Mathf.Clamp(elapsedTime / jumpDuration, 0f, 1f);
@@ -148,7 +173,7 @@ public class PlayerControl : MonoBehaviour
 
     //     if (p >= 1f)
     //     {
-    //         isJump = false;
+    //         isVertical = false;
     //         pos.y = 0f;
     //     }
     // }

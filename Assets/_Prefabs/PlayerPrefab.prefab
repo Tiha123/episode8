@@ -48,6 +48,7 @@ MonoBehaviour:
   moveDuration: 0.3
   jumpHeight: 2
   jumpDuration: 0.5
+  slideDuration: 0.5
   moveEase: 27
   jumpEase: 32
   pivot: {fileID: 7455715410826711361}
@@ -55,6 +56,7 @@ MonoBehaviour:
   slideRightDeform: {fileID: 3045003567021568155}
   jumpUpDeform: {fileID: 4375564617746092134}
   jumpDownDeform: {fileID: 4074263243428660494}
+  slideDeform: {fileID: 7417524736038855460}
   trackmgr: {fileID: 0}
 --- !u!1 &318441253154371555
 GameObject:
@@ -178,9 +180,61 @@ MonoBehaviour:
     active: 1
   - component: {fileID: 4074263243428660494}
     active: 1
+  - component: {fileID: 7417524736038855460}
+    active: 1
   customBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.25, y: 0.25, z: 0.25}
+--- !u!1 &1316932647283196260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2849251958464225607}
+  - component: {fileID: 7417524736038855460}
+  m_Layer: 0
+  m_Name: SlideDeformer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2849251958464225607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316932647283196260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2963416016971027022}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &7417524736038855460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316932647283196260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ed453254255cb409bad7ea6d0a427c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
+  factor: 0
+  curvature: 1
+  top: 0.5
+  bottom: -0.5
+  axis: {fileID: 2849251958464225607}
 --- !u!1 &1843567858460537022
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +357,8 @@ MonoBehaviour:
     active: 1
   - component: {fileID: 4074263243428660494}
     active: 1
+  - component: {fileID: 7417524736038855460}
+    active: 1
   customBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.25, y: 0.25, z: 0.25}
@@ -331,7 +387,7 @@ Transform:
   m_GameObject: {fileID: 2460815255430965801}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.03, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -339,6 +395,7 @@ Transform:
   - {fileID: 2245831847989261545}
   - {fileID: 7410745264507896311}
   - {fileID: 6752503925480680333}
+  - {fileID: 2849251958464225607}
   m_Father: {fileID: 7455715410826711361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2927269923627549337
@@ -469,7 +526,7 @@ Transform:
   m_GameObject: {fileID: 3335251629281800427}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.028, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -566,6 +623,8 @@ MonoBehaviour:
   - component: {fileID: 4375564617746092134}
     active: 1
   - component: {fileID: 4074263243428660494}
+    active: 1
+  - component: {fileID: 7417524736038855460}
     active: 1
   customBounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -742,6 +801,8 @@ MonoBehaviour:
     active: 1
   - component: {fileID: 4074263243428660494}
     active: 1
+  - component: {fileID: 7417524736038855460}
+    active: 1
   customBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.25, y: 0.25, z: 0.25}
@@ -802,7 +863,7 @@ Transform:
   m_GameObject: {fileID: 7368070567528554602}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -931,6 +992,8 @@ MonoBehaviour:
   - component: {fileID: 4375564617746092134}
     active: 1
   - component: {fileID: 4074263243428660494}
+    active: 1
+  - component: {fileID: 7417524736038855460}
     active: 1
   customBounds:
     m_Center: {x: 0, y: 0, z: 0}

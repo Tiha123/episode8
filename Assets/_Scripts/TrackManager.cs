@@ -15,15 +15,26 @@ public class TrackManager : MonoBehaviour
 
     [SerializeField] float trackThreshold = 0f;
 
+    [Range(0f,10f)] public float TrackCurveParamX=0f;
+    [Range(0f,10f)] public float TrackCurveParamY=0f;
+
+    [Range(0f,0.5f)] public float CurveFrequency=0.5f;
+    [Range(0f,10f)] public float CurveAmplitude=0f;
+
     int nameindex = 0;
 
     Transform camTransform;
 
     public List<Transform> laneList;
 
+    public Material TrackMaterial;
+
+    int curveAmount;
+
     void Start()
     {
         camTransform = Camera.main.transform;
+        curveAmount=Shader.PropertyToID("_CurveAmount");
         SpawnInitialTrack();
         SpawnPlayer();
     }
@@ -32,6 +43,7 @@ public class TrackManager : MonoBehaviour
     {
         // ScrollTrack();
         RepositionTrack();
+        curveTrack();
     }
 
     void SpawnInitialTrack()
@@ -88,5 +100,12 @@ public class TrackManager : MonoBehaviour
     {
         PlayerControl temp = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity, transform);
         temp.trackmgr = this;
+    }
+
+    void curveTrack()
+    {
+        TrackCurveParamX=Mathf.Lerp(-CurveAmplitude,CurveAmplitude,Mathf.PerlinNoise1D(Time.time*CurveFrequency));
+        TrackCurveParamY=Mathf.Lerp(-CurveAmplitude,CurveAmplitude,Mathf.PerlinNoise1D(TrackCurveParamX));
+        TrackMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY,0f,0f));
     }
 }
