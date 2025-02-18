@@ -45,8 +45,6 @@ public class TrackManager : MonoBehaviour
         SpawnInitialTrack();
         SpawnPlayer();
         StartCoroutine(CountdownTrack());
-        Debug.Log("Start!");
-        GameManager.IsPlaying=true;
     }
 
     void Update()
@@ -58,6 +56,7 @@ public class TrackManager : MonoBehaviour
         // ScrollTrack();
         RepositionTrack();
         BendTrack();
+        GameManager.MoveDistance+=scrollspeed*Time.deltaTime;
     }
 
     void SpawnInitialTrack()
@@ -139,7 +138,8 @@ public class TrackManager : MonoBehaviour
             Debug.Log($"{i}");
             yield return new WaitForSeconds(1f);
         }
-        yield break;
+        Debug.Log("Start!");
+        GameManager.IsPlaying=true;
     }
 
 

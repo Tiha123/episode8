@@ -161,11 +161,11 @@ public class PlayerControl : MonoBehaviour
         SwitchSlide(state);
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
         seqJump.Append(DOVirtual.Float(0f, -1f, slideDuration / 2, (v) => slideDeform.Factor = v));
-        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v).OnComplete(() =>
+        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v));
+        seqJump.InsertCallback(slideDuration, ()=>state = PlayerState.Idle).OnComplete(() =>
         {
             SwitchSlide(state);
-        }));
-        seqJump.InsertCallback(slideDuration, ()=>state = PlayerState.Idle);
+        });
 
     }
 

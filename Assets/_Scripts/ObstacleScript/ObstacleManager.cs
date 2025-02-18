@@ -1,6 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+
+public enum ObstacleType {Single, Top, Bottom, Double, Triple, _MAX}
 
 public class ObstacleManager : MonoBehaviour
 {
@@ -11,6 +14,11 @@ public class ObstacleManager : MonoBehaviour
     [SerializeField] Transform spawnPoint;
 
     [SerializeField] float spawnInterval;
+
+    [SerializeField] List<Obstacle> obstacleSingle;
+    [SerializeField] List<Obstacle> obstacleTop;
+    [SerializeField] List<Obstacle> obstacleBottom;
+    List<List<Obstacle>> obstacleList;
 
     IEnumerator Start()
     {
@@ -50,6 +58,28 @@ public class ObstacleManager : MonoBehaviour
         {
             return;
         }
-        Obstacle o = Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity, t.ObstacleRoot);
+        Obstacle rndobstacle=RnadomTypeSpawn();
+        if (rndobstacle!=null)
+        {   
+            Obstacle o = Instantiate(rndobstacle, spawnPosition, Quaternion.identity, t.ObstacleRoot);
+        }
+    }
+    
+    Obstacle RnadomTypeSpawn()
+    {
+        ;
+        int rndType=UnityEngine.Random.Range((int)ObstacleType.Single, (int)ObstacleType._MAX);
+        List<Obstacle> obstacles = rndType switch
+        {
+            (int)ObstacleType.Single=>obstacleSingle,
+            (int)ObstacleType.Top=>obstacleTop,
+            (int)ObstacleType.Bottom=>obstacleBottom,
+            _=>null
+        };
+        if (obstacles==null)
+        {
+            return null;
+        }
+        return obstacles[UnityEngine.Random.Range(0,obstacles.Count)];
     }
 }
