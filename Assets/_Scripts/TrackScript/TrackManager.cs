@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class TrackManager : MonoBehaviour
@@ -13,6 +14,8 @@ public class TrackManager : MonoBehaviour
     [Range(0f, 50f)] public float scrollspeed = 10f;
 
     [SerializeField, Range(1, 100)] int TrackCount = 3;
+
+    [Range(1,5)] public int Countdown =3;
 
     [SerializeField] float trackThreshold = 5f;
 
@@ -33,19 +36,15 @@ public class TrackManager : MonoBehaviour
     [SerializeField] Material TrackMaterial;
 
     int curveAmount;
+    public float elapsedTime=0f;
 
-    IEnumerator Start()
+    void Start()
     {
         camTransform = Camera.main.transform;
         curveAmount = Shader.PropertyToID("_CurveAmount");
         SpawnInitialTrack();
         SpawnPlayer();
-        Debug.Log("3");
-        yield return new WaitForSeconds(1);
-        Debug.Log("2");
-        yield return new WaitForSeconds(1);
-        Debug.Log("1");
-        yield return new WaitForSeconds(1);
+        StartCoroutine(CountdownTrack());
         Debug.Log("Start!");
         GameManager.IsPlaying=true;
     }
@@ -69,6 +68,7 @@ public class TrackManager : MonoBehaviour
             Track temp = SpawnNextTrack(pos);
             pos = temp.ExitPoint.position;
         }
+        BendTrack();
     }
 
     // void ScrollTrack()
@@ -113,7 +113,8 @@ public class TrackManager : MonoBehaviour
 
     void BendTrack()
     {
-        TrackCurveParamX = Mathf.Lerp(-CurveAmplitudeX, CurveAmplitudeX, Mathf.PerlinNoise1D(Time.time * CurveFrequencyX));
+        elapsedTime+=Time.deltaTime;
+        TrackCurveParamX = Mathf.Lerp(-CurveAmplitudeX, CurveAmplitudeX, Mathf.PerlinNoise1D(elapsedTime * CurveFrequencyX));
         TrackCurveParamY = Mathf.Lerp(-CurveAmplitudeY, CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * CurveFrequencyY));
         TrackMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
@@ -131,7 +132,15 @@ public class TrackManager : MonoBehaviour
         return null;
     }
 
-
+    IEnumerator CountdownTrack()
+    {
+        for(int i=Countdown;i>0;--i)
+        {
+            Debug.Log($"{i}");
+            yield return new WaitForSeconds(1f);
+        }
+        yield break;
+    }
 
 
 

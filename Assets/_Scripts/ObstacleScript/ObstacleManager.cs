@@ -30,10 +30,11 @@ public class ObstacleManager : MonoBehaviour
     {
         while(true)
         {
-            if(GameManager.IsPlaying==false)
-            {
-                yield break;
-            }
+            yield return new WaitUntil(()=>GameManager.IsPlaying);
+            // if(GameManager.IsPlaying==false)
+            // {
+            //     yield return null;
+            // }
             SpawnObstacle(UnityEngine.Random.Range(0,trackmgr.laneList.Count-1));
             yield return new WaitForSeconds(spawnInterval);
         }

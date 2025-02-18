@@ -47,6 +47,7 @@ public class PlayerControl : MonoBehaviour
         currentLane = trackmgr.laneList.Count / 2;
         curveAmount = Shader.PropertyToID("_CurveAmount");
         SwitchSlide(state);
+        BendCar();
     }
 
     // void Update()
@@ -72,6 +73,11 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GameManager.IsPlaying = !GameManager.IsPlaying;
+            Debug.Log(GameManager.IsPlaying);
+        }
         if (GameManager.IsPlaying == false)
         {
             return;
@@ -145,7 +151,7 @@ public class PlayerControl : MonoBehaviour
         seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
         seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
-        seqJump.InsertCallback(jumpDuration*9/10, ()=>state = PlayerState.Idle);
+        seqJump.InsertCallback(jumpDuration, ()=>state = PlayerState.Idle);
     }
 
     void HandleSlide()
@@ -159,7 +165,7 @@ public class PlayerControl : MonoBehaviour
         {
             SwitchSlide(state);
         }));
-        seqJump.InsertCallback(slideDuration*9/10, ()=>state = PlayerState.Idle);
+        seqJump.InsertCallback(slideDuration, ()=>state = PlayerState.Idle);
 
     }
 
@@ -175,7 +181,7 @@ void SwitchSlide(PlayerState pState)
 
     void BendCar()
     {
-        float TrackCurveParamX = Mathf.Lerp(-trackmgr.CurveAmplitudeX, trackmgr.CurveAmplitudeX, Mathf.PerlinNoise1D(Time.time * trackmgr.CurveFrequencyX));
+        float TrackCurveParamX = Mathf.Lerp(-trackmgr.CurveAmplitudeX, trackmgr.CurveAmplitudeX, Mathf.PerlinNoise1D(trackmgr.elapsedTime * trackmgr.CurveFrequencyX));
         float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
         CarMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
