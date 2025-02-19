@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 public class ObstacleDCompose : ObstacleDouble
 {
-    public List<Obstacle> compositePrefabs;
+    [SerializeField] List<Obstacle> compositePrefabs;
+
+    protected List<Vector3> spawnedPos;
 
     void Start()
     {
         SpawnComposited();
     }
-    private void SpawnComposited()
+    protected void SpawnComposited()
     {
 
         spawnedPos.ForEach(p =>
@@ -22,5 +24,15 @@ public class ObstacleDCompose : ObstacleDouble
             o.transform.localPosition = new Vector3(localPos.x, 0f, 0f);
         });
 
+    }
+    public override void SetLandPosition(int laneNum, float zpos, TrackManager trackmgr)
+    {
+        int b=Random.Range(laneNum+1,trackmgr.laneList.Count);
+        spawnedPos.Add(trackmgr.laneList[laneNum].position);
+        spawnedPos.Add(trackmgr.laneList[b].position);
+        
+        Transform laneTransform = trackmgr.laneList[trackmgr.laneList.Count/2];
+        Vector3 spawnPosition = new Vector3(laneTransform.position.x, laneTransform.position.y, zpos);
+        transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
 }

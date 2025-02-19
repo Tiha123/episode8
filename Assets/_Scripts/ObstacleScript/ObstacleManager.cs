@@ -13,8 +13,8 @@ public class ObstacleManager : MonoBehaviour
     [SerializeField] List<Obstacle> obstacleSingle;
     [SerializeField] List<Obstacle> obstacleDouble;
     [SerializeField] List<Obstacle> obstacleTriple;
+    [SerializeField] List<Obstacle> obstacleDComposite;
     [SerializeField] float spawnZpos = 18f;
-    List<List<Obstacle>> obstacleList;
 
     IEnumerator Start()
     {
@@ -73,7 +73,7 @@ public class ObstacleManager : MonoBehaviour
             (int)ObstacleType.Single => obstacleSingle,
             (int)ObstacleType.Double => obstacleDouble,
             (int)ObstacleType.Triple => obstacleTriple,
-            (int)ObstacleType.DoubleComposite => obstacleTriple,
+            (int)ObstacleType.DoubleComposite => obstacleDComposite,
             _ => null
         };
         Obstacle prefab;
