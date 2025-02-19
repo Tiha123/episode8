@@ -58,7 +58,7 @@ MonoBehaviour:
   jumpUpDeform: {fileID: 4375564617746092134}
   jumpDownDeform: {fileID: 4074263243428660494}
   slideDeform: {fileID: 7417524736038855460}
-  Colliders:
+  CollidersList:
   - {fileID: 3687829804659848202}
   - {fileID: 3687829804659848202}
   - {fileID: 3687829804659848202}

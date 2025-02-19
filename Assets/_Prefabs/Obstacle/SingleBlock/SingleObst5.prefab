@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 2182868797078613214}
   - component: {fileID: -8281655742736464877}
   m_Layer: 0
-  m_Name: BottomObst1
+  m_Name: SingleObst5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

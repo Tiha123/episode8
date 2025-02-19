@@ -1,23 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
-public enum ObstacleType {Single, Top, Bottom, Double, Triple, _MAX}
+public enum ObstacleType { Single, Double, Triple,DoubleComposite, _MAX }
 
 public class ObstacleManager : MonoBehaviour
 {
     [SerializeField] Obstacle obstaclePrefab;
 
     TrackManager trackmgr;
-
-    [SerializeField] Transform spawnPoint;
-
     [SerializeField] float spawnInterval;
-
     [SerializeField] List<Obstacle> obstacleSingle;
-    [SerializeField] List<Obstacle> obstacleTop;
-    [SerializeField] List<Obstacle> obstacleBottom;
+    [SerializeField] List<Obstacle> obstacleDouble;
+    [SerializeField] List<Obstacle> obstacleTriple;
+    [SerializeField] float spawnZpos = 18f;
     List<List<Obstacle>> obstacleList;
 
     IEnumerator Start()
@@ -30,58 +26,65 @@ public class ObstacleManager : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
         trackmgr = tm[0];
-        yield return new WaitUntil(()=>GameManager.IsPlaying == true);
+        yield return new WaitUntil(() => GameManager.IsPlaying == true);
         StartCoroutine(SpawnInfinite());
     }
 
     IEnumerator SpawnInfinite()
     {
-        float PrevDistance=GameManager.MoveDistance;
-        while(true)
+        float PrevDistance = GameManager.MoveDistance;
+        while (true)
         {
-            yield return new WaitUntil(()=>GameManager.IsPlaying);
+            yield return new WaitUntil(() => GameManager.IsPlaying);
             // if(GameManager.IsPlaying==false)
             // {
             //     yield return null;
             // }
-            SpawnObstacle(UnityEngine.Random.Range(0,trackmgr.laneList.Count));
-            yield return new WaitUntil(()=>(GameManager.MoveDistance-PrevDistance)>spawnInterval);
-            PrevDistance=GameManager.MoveDistance;
+            SpawnObstacle();
+            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > spawnInterval);
+            PrevDistance = GameManager.MoveDistance;
         }
     }
 
-    void SpawnObstacle(int laneNum)
+    void SpawnObstacle()
     {
-        laneNum = math.clamp(laneNum, 0, trackmgr.laneList.Count);
-        Transform laneTransform = trackmgr.laneList[laneNum];
-        Vector3 spawnPosition = new Vector3(laneTransform.position.x, laneTransform.position.y, spawnPoint.position.z);
-        Track t=trackmgr.GetTrackByZ(spawnPoint.position.z);
-        if(t==null)
+        (int laneNum, Obstacle rndobstacle) = RandomLanePrefab();
+
+
+        Track t = trackmgr.GetTrackByZ(spawnZpos);
+
+        if (t == null)
         {
             return;
         }
-        Obstacle rndobstacle=RnadomTypeSpawn();
-        if (rndobstacle!=null)
-        {   
-            Obstacle o = Instantiate(rndobstacle, spawnPosition, Quaternion.identity, t.ObstacleRoot);
+        if (rndobstacle != null)
+        {
+            Obstacle o = Instantiate(rndobstacle, t.ObstacleRoot);
+            o.SetLandPosition(laneNum, spawnZpos, trackmgr);
         }
     }
-    
-    Obstacle RnadomTypeSpawn()
+
+    (int, Obstacle) RandomLanePrefab()
     {
-        ;
-        int rndType=UnityEngine.Random.Range((int)ObstacleType.Single, (int)ObstacleType._MAX);
+        int rndLane = Random.Range(0, trackmgr.laneList.Count);
+        int rndType = Random.Range((int)ObstacleType.Single, (int)ObstacleType._MAX);
         List<Obstacle> obstacles = rndType switch
         {
-            (int)ObstacleType.Single=>obstacleSingle,
-            (int)ObstacleType.Top=>obstacleTop,
-            (int)ObstacleType.Bottom=>obstacleBottom,
-            _=>null
+            (int)ObstacleType.Single => obstacleSingle,
+            (int)ObstacleType.Double => obstacleDouble,
+            (int)ObstacleType.Triple => obstacleTriple,
+            (int)ObstacleType.DoubleComposite => obstacleTriple,
+            _ => null
         };
-        if (obstacles==null)
+        Obstacle prefab;
+        if (obstacles.Count != 0 && obstacles != null)
         {
-            return null;
+            prefab = obstacles[Random.Range(0, obstacles.Count)];
         }
-        return obstacles[UnityEngine.Random.Range(0,obstacles.Count)];
+        else
+        {
+            prefab = null;
+        }
+        return (rndLane, prefab);
     }
 }
