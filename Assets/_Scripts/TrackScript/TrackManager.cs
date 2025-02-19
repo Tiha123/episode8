@@ -56,7 +56,7 @@ public class TrackManager : MonoBehaviour
         // ScrollTrack();
         RepositionTrack();
         BendTrack();
-        GameManager.MoveDistance+=scrollspeed*Time.deltaTime;
+        GameManager.MoveDistance+=scrollspeed*Time.smoothDeltaTime;
     }
 
     void SpawnInitialTrack()

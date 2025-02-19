@@ -36,6 +36,7 @@ public class ObstacleManager : MonoBehaviour
 
     IEnumerator SpawnInfinite()
     {
+        float PrevDistance=GameManager.MoveDistance;
         while(true)
         {
             yield return new WaitUntil(()=>GameManager.IsPlaying);
@@ -43,8 +44,9 @@ public class ObstacleManager : MonoBehaviour
             // {
             //     yield return null;
             // }
-            SpawnObstacle(UnityEngine.Random.Range(0,trackmgr.laneList.Count-1));
-            yield return new WaitForSeconds(spawnInterval);
+            SpawnObstacle(UnityEngine.Random.Range(0,trackmgr.laneList.Count));
+            yield return new WaitUntil(()=>(GameManager.MoveDistance-PrevDistance)>spawnInterval);
+            PrevDistance=GameManager.MoveDistance;
         }
     }
 
