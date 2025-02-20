@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public abstract class RandomItem
@@ -26,7 +25,7 @@ public class RandomGenerator
 
     public RandomItem GetRandom()
     {
-        int rnd = Random.Range(0,items.Count);
+        int rnd = Random.Range(0,totalweight);
         int weightSum=0;
         foreach (RandomItem item in items)
         {

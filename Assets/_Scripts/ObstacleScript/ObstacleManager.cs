@@ -40,14 +40,15 @@ public class ObstacleManager : MonoBehaviour
         {
             rdm.AddItem(pools);
         });
-        TrackManager[] tm = FindObjectsByType<TrackManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        if (tm == null || tm.Length <= 0)
-        {
-            yield break;
-        }
+        // TrackManager[] tm = FindObjectsByType<TrackManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        // if (tm == null || tm.Length <= 0)
+        // {
+        //     yield break;
+        // }
+        // trackmgr = tm[0];
 
+        trackmgr=FindFirstObjectByType<TrackManager>();
         yield return new WaitForEndOfFrame();
-        trackmgr = tm[0];
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
         StartCoroutine(SpawnInfinite());
     }

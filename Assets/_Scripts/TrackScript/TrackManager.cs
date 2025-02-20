@@ -7,6 +7,7 @@ public class TrackManager : MonoBehaviour
 
     [SerializeField] Track TrackPrefab;
     [SerializeField] PlayerControl PlayerPrefab;
+    IngameUI gameUI;
 
     [SerializeField] List<Track> TrackList = new List<Track>();
 
@@ -39,6 +40,13 @@ public class TrackManager : MonoBehaviour
 
     void Start()
     {
+        Object[] UIs=FindObjectsByType<IngameUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (UIs!=null||UIs.Length>0)
+        {
+            gameUI=UIs[0] as IngameUI;
+        }
+        IngameUI gameUIAny=FindAnyObjectByType<IngameUI>();
+        IngameUI gameUIFirst=FindFirstObjectByType<IngameUI>();
         camTransform = Camera.main.transform;
         curveAmount = Shader.PropertyToID("_CurveAmount");
         SpawnInitialTrack();
@@ -129,15 +137,14 @@ public class TrackManager : MonoBehaviour
 
         return null;
     }
-
     IEnumerator CountdownTrack()
     {
-        for(int i=Countdown;i>0;--i)
+        for(int i=Countdown;i>=0;--i)
         {
-            Debug.Log($"{i}");
+            gameUI.ShowInfo($"{i}", 1f);
             yield return new WaitForSeconds(1f);
         }
-        Debug.Log("Start!");
+        //gameUI.ShowInfo("Start!");
         GameManager.IsPlaying=true;
     }
 

@@ -6,9 +6,10 @@ public class ObstacleTCompose : ObstacleDCompose
     int blockcount;
     List<ObstacleSingle> SafeOb = new List<ObstacleSingle>();
 
-    void Start()
+    void Awake()
     {
         SafeOb = compositePrefabs.FindAll(f => f.thisType != SingleType.BlockAll);
+        Debug.Log(SafeOb.Count);
     }
     protected override void SpawnComposited()
     {
@@ -51,6 +52,8 @@ public class ObstacleTCompose : ObstacleDCompose
     private ObstacleSingle GetRandomPrefab(List<ObstacleSingle> prefabs)
     {
         int rnd = Random.Range(0, prefabs.Count);
+        Debug.Log(prefabs.Count);
+        Debug.Log(rnd);
         ObstacleSingle result = prefabs[rnd];
         return result;
     }
