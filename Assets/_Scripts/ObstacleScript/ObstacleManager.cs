@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ObstacleType { Single, Double, Triple,DoubleComposite, _MAX }
+public enum ObstacleType { Single, Double, Triple,DoubleComposite,TripleComposite, _MAX }
 
 public class ObstacleManager : MonoBehaviour
 {
@@ -14,6 +14,7 @@ public class ObstacleManager : MonoBehaviour
     [SerializeField] List<Obstacle> obstacleDouble;
     [SerializeField] List<Obstacle> obstacleTriple;
     [SerializeField] List<Obstacle> obstacleDComposite;
+    [SerializeField] List<Obstacle> obstacleTComposite;
     [SerializeField] float spawnZpos = 18f;
 
     IEnumerator Start()
@@ -74,6 +75,7 @@ public class ObstacleManager : MonoBehaviour
             (int)ObstacleType.Double => obstacleDouble,
             (int)ObstacleType.Triple => obstacleTriple,
             (int)ObstacleType.DoubleComposite => obstacleDComposite,
+            (int)ObstacleType.TripleComposite => obstacleTComposite,
             _ => null
         };
         Obstacle prefab;
