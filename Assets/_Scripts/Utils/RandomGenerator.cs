@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
+using UnityEngine;
+
+public abstract class RandomItem
+{
+    public string name;
+    public int weight;
+
+    public abstract Object GetItem();
+}
+public class RandomGenerator
+{
+    public List<RandomItem> items=new List<RandomItem> ();
+
+    public int totalweight;
+
+    private void CalcTotalWeight()
+    {
+        totalweight=0;
+        items.ForEach(item=>
+            {
+                totalweight+=item.weight;
+            });
+    }
+
+    public RandomItem GetRandom()
+    {
+        int rnd = Random.Range(0,items.Count);
+        int weightSum=0;
+        foreach (RandomItem item in items)
+        {
+            weightSum+=item.weight;
+            if(rnd<weightSum+item.weight)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
+
+    public void AddItem(RandomItem item)
+    {
+        items.Add(item);
+        CalcTotalWeight();
+    }
+}

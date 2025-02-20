@@ -20,9 +20,9 @@ public class ObstacleDCompose : Obstacle
     }
     public override void SetLandPosition(int laneNum, float zpos, TrackManager trackmgr)
     {
-        laneNum = Mathf.Clamp(laneNum, 0, trackmgr.laneList.Count - 1);
         int a=Random.Range(0,trackmgr.laneList.Count-1);
         int b=Random.Range(a+1,trackmgr.laneList.Count);
+
         spawnedPos.Add(trackmgr.laneList[a].position);
         spawnedPos.Add(trackmgr.laneList[b].position);
         

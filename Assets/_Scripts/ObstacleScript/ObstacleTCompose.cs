@@ -30,12 +30,11 @@ public class ObstacleTCompose : ObstacleDCompose
     }
     public override void SetLandPosition(int laneNum, float zpos, TrackManager trackmgr)
     {
-        laneNum = Mathf.Clamp(laneNum, 0, trackmgr.laneList.Count - 1);
         foreach (Transform t in trackmgr.laneList)
         {
             spawnedPos.Add(t.position);
         }
-        Transform laneTransform = trackmgr.laneList[laneNum];
+        Transform laneTransform = trackmgr.laneList[trackmgr.laneList.Count/2];
         Vector3 spawnPosition = new Vector3(laneTransform.position.x, laneTransform.position.y, zpos);
         transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
         blockcount = trackmgr.laneList.Count;
