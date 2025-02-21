@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7441388873405052538}
   m_Layer: 0
   m_Name: pivot
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 2528678964350958494}
   m_Layer: 0
   m_Name: SM_Prop_Roadcone_01
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: -354541813342667598}
   m_Layer: 0
   m_Name: SIngleObst3
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

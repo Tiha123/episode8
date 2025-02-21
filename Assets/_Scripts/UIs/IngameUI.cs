@@ -1,17 +1,25 @@
+using CustomInspector;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class IngameUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI tmDistance;
+    [HorizontalLine("정보출력")]
     [SerializeField] TextMeshProUGUI tmInformation;
+    [HorizontalLine]
+    [SerializeField] TextMeshProUGUI tmDistance;
+    [HorizontalLine]
+    [SerializeField] TextMeshProUGUI tmCoin;
+    [HorizontalLine]
+    [SerializeField] TextMeshProUGUI tmHealth;
     Sequence _seqInfo;
+    Sequence _seqCoin;
     string Dist;
 
     void Awake()
     {
-        tmInformation.text="";
+        tmInformation.text = "";
     }
     void Start()
     {
@@ -19,6 +27,12 @@ public class IngameUI : MonoBehaviour
         tmInformation.gameObject.SetActive(false);
     }
     void Update()
+    {
+        UpdateDistance();
+        UpdateCoins();
+    }
+
+    void UpdateDistance()
     {
         if (GameManager.IsPlaying == false)
         {
@@ -34,14 +48,9 @@ public class IngameUI : MonoBehaviour
         tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
     }
 
-    void UpdateDistance()
-    {
-
-    }
-
     public void ShowInfo(string info, float duration = 1f)
     {
-        tmInformation.transform.localScale=Vector3.zero;
+        tmInformation.transform.localScale = Vector3.zero;
         if (_seqInfo != null)
         {
             _seqInfo.Kill(true);
@@ -49,11 +58,29 @@ public class IngameUI : MonoBehaviour
         _seqInfo = DOTween.Sequence();
         _seqInfo.AppendCallback(() => tmInformation.gameObject.SetActive(true));
         _seqInfo.AppendCallback(() => tmInformation.text = info);
-        _seqInfo.Append(tmInformation.transform.DOScale(1.2f, duration*0.1f));
-        _seqInfo.Append(tmInformation.transform.DOScale(1f, duration*0.2f));
-        _seqInfo.AppendInterval(duration*0.4f);
-        _seqInfo.Append(tmInformation.transform.DOScale(0f, duration*0.5f));
+        _seqInfo.Append(tmInformation.rectTransform.DOScale(1.2f, duration * 0.1f));
+        _seqInfo.Append(tmInformation.rectTransform.DOScale(1f, duration * 0.2f));
+        _seqInfo.AppendInterval(duration * 0.4f);
+        _seqInfo.Append(tmInformation.rectTransform.DOScale(0f, duration * 0.5f));
         _seqInfo.AppendCallback(() => tmInformation.gameObject.SetActive(false));
+    }
+    private uint _coinPrev = 1;
+    void UpdateCoins()
+    {
+        if (_coinPrev == GameManager.Coin)
+        {
+            return;
+        }
+        tmCoin.text = GameManager.Coin.ToString("N0");
+        if (_seqCoin != null)
+        {
+            _seqCoin.Kill(true);
+        }
+        tmCoin.rectTransform.localScale=Vector3.one;
+        _seqCoin = DOTween.Sequence();
+        _seqCoin.Append(tmCoin.rectTransform.DOPunchScale(Vector3.one * 1.2f, 0.1f, 10, 1f));
+        _seqCoin.Append(tmCoin.rectTransform.DOPunchScale(Vector3.one, 0.2f, 10, 1f));
+        _coinPrev++;
     }
 
     string FormattedFloat(float value)

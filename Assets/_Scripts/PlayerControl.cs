@@ -181,7 +181,14 @@ public class PlayerControl : MonoBehaviour
     {
         if (other)
         {
-            GameManager.IsPlaying = false;
+            if (other.tag=="Collectable")
+            {
+                GameManager.Coin++;
+            }
+            else if(other.tag=="Obstacle")
+            {
+                GameManager.IsPlaying = false;
+            }
         }
     }
 

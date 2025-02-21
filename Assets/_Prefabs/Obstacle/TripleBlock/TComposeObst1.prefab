@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5215698035188708702}
   m_Layer: 0
   m_Name: TComposeObst1
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 4535971915203562025}
   m_Layer: 0
   m_Name: pivot
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
