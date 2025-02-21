@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Deform;
 using DG.Tweening;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
@@ -45,6 +44,10 @@ public class PlayerControl : MonoBehaviour
     {
         currentLane = trackmgr.laneList.Count / 2;
         curveAmount = Shader.PropertyToID("_CurveAmount");
+        CollidersList.ForEach(p=>
+        {
+            p.gameObject.SetActive(false);
+        });
         SwitchState(state, out state, PlayerState.Idle);
         BendCar();
     }
@@ -183,7 +186,10 @@ public class PlayerControl : MonoBehaviour
         {
             if (other.tag=="Collectable")
             {
-                GameManager.Coin++;
+                var c = other.GetComponentInParent<Collectable>();
+                other.enabled=false;
+                c?.Collect();
+
             }
             else if(other.tag=="Obstacle")
             {

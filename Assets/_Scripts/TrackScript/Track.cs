@@ -7,6 +7,7 @@ public class Track : MonoBehaviour
     public Transform ExitPoint;
     public List<Transform> Lanes = new List<Transform>();
     public Transform ObstacleRoot;
+    public Transform collectableRoot;
 
 
     [HideInInspector] public TrackManager trackmgr;

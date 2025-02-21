@@ -64,7 +64,7 @@ public class IngameUI : MonoBehaviour
         _seqInfo.Append(tmInformation.rectTransform.DOScale(0f, duration * 0.5f));
         _seqInfo.AppendCallback(() => tmInformation.gameObject.SetActive(false));
     }
-    private uint _coinPrev = 1;
+    private uint _coinPrev = 0;
     void UpdateCoins()
     {
         if (_coinPrev == GameManager.Coin)
