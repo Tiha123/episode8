@@ -1,5 +1,6 @@
 using CustomInspector;
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
 
@@ -7,12 +8,14 @@ public class IngameUI : MonoBehaviour
 {
     [HorizontalLine("정보출력")]
     [SerializeField] TextMeshProUGUI tmInformation;
+    [SerializeField] MMF_Player feedbackInformation;
+    
     [HorizontalLine]
     [SerializeField] TextMeshProUGUI tmDistance;
     [HorizontalLine]
     [SerializeField] TextMeshProUGUI tmCoin;
     [HorizontalLine]
-    [SerializeField] TextMeshProUGUI tmHealth;
+    [SerializeField] TextMeshProUGUI tmlife;
     Sequence _seqInfo;
     Sequence _seqCoin;
     string Dist;
@@ -30,6 +33,7 @@ public class IngameUI : MonoBehaviour
     {
         UpdateDistance();
         UpdateCoins();
+        UpdateLife();
     }
 
     void UpdateDistance()
@@ -76,11 +80,29 @@ public class IngameUI : MonoBehaviour
         {
             _seqCoin.Kill(true);
         }
-        tmCoin.rectTransform.localScale=Vector3.one;
+        tmCoin.rectTransform.localScale = Vector3.one;
         _seqCoin = DOTween.Sequence();
         _seqCoin.Append(tmCoin.rectTransform.DOPunchScale(Vector3.one * 1.2f, 0.1f, 10, 1f));
         _seqCoin.Append(tmCoin.rectTransform.DOPunchScale(Vector3.one, 0.2f, 10, 1f));
         _coinPrev++;
+    }
+    private int _lifePrev = 3;
+    void UpdateLife()
+    {
+        if (GameManager.life <= 0)
+        {
+            tmInformation.gameObject.SetActive(true);
+            tmInformation.rectTransform.DOScale(1f,0.5f);
+            tmInformation.text = "Game Over!";
+            GameManager.IsGameOver=true;
+        }
+        if (_lifePrev == GameManager.life)
+        {
+            return;
+        }
+        tmlife.text = $"{GameManager.life}/{3}";
+        _lifePrev = GameManager.life;
+        
     }
 
     string FormattedFloat(float value)

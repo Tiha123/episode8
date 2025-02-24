@@ -71,7 +71,7 @@ public class CollectableManager : MonoBehaviour
     (int, Collectable) RandomLanePrefab()
     {
         int rndLane = Random.Range(0, trackmgr.laneList.Count);
-        Collectable collectable = rdm.GetRandom().GetItem() as Collectable;
+        Collectable collectable = rdm.GetRandom(true).GetItem() as Collectable;
         Collectable prefab;
         if (collectable != null)
         {

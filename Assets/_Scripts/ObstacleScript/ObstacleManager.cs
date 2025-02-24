@@ -19,7 +19,7 @@ public class ObstaclePool : RandomItem
 public class ObstacleManager : MonoBehaviour
 {
     public List<ObstaclePool> obstaclePools;
-    [SerializeField, AsRange(0,100)] Vector2 spawnInterval;
+    [SerializeField, AsRange(0,100)] Vector2 spawnIntervalo;
     [SerializeField] float spawnZpos = 18f;
 
     [Space(20)]
@@ -62,7 +62,7 @@ public class ObstacleManager : MonoBehaviour
             //     yield return null;
             // }
             SpawnObstacle();
-            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(spawnInterval.x,spawnInterval.y));
+            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(spawnIntervalo.x,spawnIntervalo.y));
             PrevDistance = GameManager.MoveDistance;
         }
     }
@@ -89,7 +89,7 @@ public class ObstacleManager : MonoBehaviour
     {
         int rndLane = Random.Range(0, trackmgr.laneList.Count);
         // int rndType = Random.Range((int)ObstacleType.Single, (int)ObstacleType._MAX);
-        Obstacle obstacle = rdm.GetRandom().GetItem() as Obstacle;
+        Obstacle obstacle = rdm.GetRandom(false).GetItem() as Obstacle;
         // List<Obstacle> obstacles = rndType switch
         // {
         //     (int)ObstacleType.Single => obstacleSingle,

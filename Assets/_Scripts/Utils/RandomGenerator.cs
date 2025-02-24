@@ -23,14 +23,14 @@ public class RandomGenerator
             });
     }
 
-    public RandomItem GetRandom()
+    public RandomItem GetRandom(bool deb)
     {
         int rnd = Random.Range(0,totalweight);
         int weightSum=0;
         foreach (RandomItem item in items)
         {
             weightSum+=item.weight;
-            if(rnd<weightSum+item.weight)
+            if(rnd<weightSum)
             {
                 return item;
             }

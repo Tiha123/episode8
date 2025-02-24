@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Deform;
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
@@ -38,7 +39,11 @@ public class PlayerControl : MonoBehaviour
     public PlayerState state = PlayerState.Idle;
 
     [SerializeField] Material CarMaterial;
+    [SerializeField] Material CollectMaterial;
     int curveAmount;
+    [Space(20)]
+    [SerializeField] MMF_Player feedbackImpact;
+    [SerializeField] MMF_Player feedbackCrash;
 
     void Start()
     {
@@ -49,7 +54,8 @@ public class PlayerControl : MonoBehaviour
             p.gameObject.SetActive(false);
         });
         SwitchState(state, out state, PlayerState.Idle);
-        BendCar();
+        BendThings(CarMaterial);
+        BendThings(CollectMaterial);
     }
 
     // void Update()
@@ -75,9 +81,10 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)&&GameManager.IsGameOver==true)
         {
             GameManager.IsPlaying = !GameManager.IsPlaying;
+            GameManager.life=3;
         }
         if (GameManager.IsPlaying == false)
         {
@@ -103,7 +110,8 @@ public class PlayerControl : MonoBehaviour
         {
             HandlePlayer(1);
         }
-        BendCar();
+        BendThings(CarMaterial);
+        BendThings(CollectMaterial);
     }
 
 
@@ -173,11 +181,11 @@ public class PlayerControl : MonoBehaviour
         outState = changeState;
     }
 
-    void BendCar()
+    void BendThings(Material mat)
     {
         float TrackCurveParamX = Mathf.Lerp(-trackmgr.CurveAmplitudeX, trackmgr.CurveAmplitudeX, Mathf.PerlinNoise1D(trackmgr.elapsedTime * trackmgr.CurveFrequencyX));
         float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
-        CarMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
+        mat.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
 
     void OnTriggerEnter(Collider other)
@@ -186,8 +194,7 @@ public class PlayerControl : MonoBehaviour
         {
             if (other.tag=="Collectable")
             {
-                DOVirtual.Float(0f,1f,0.1f,v=>CarMaterial.SetFloat("_Impact", v))
-                    .OnComplete(()=>DOVirtual.Float(1f,0f,0.1f,v=>CarMaterial.SetFloat("_Impact", v)));
+                feedbackImpact?.PlayFeedbacks();
                 var c = other.GetComponentInParent<Collectable>();
                 other.enabled=false;
                 c?.Collect();
@@ -195,7 +202,13 @@ public class PlayerControl : MonoBehaviour
             }
             else if(other.tag=="Obstacle")
             {
-                GameManager.IsPlaying = false;
+                float a=trackmgr.scrollspeed;
+                feedbackCrash?.PlayFeedbacks();
+                GameManager.life--;
+                if (GameManager.life<=0)
+                {
+                    GameManager.IsPlaying = false;
+                }
             }
         }
     }
