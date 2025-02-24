@@ -186,6 +186,8 @@ public class PlayerControl : MonoBehaviour
         {
             if (other.tag=="Collectable")
             {
+                DOVirtual.Float(0f,1f,0.1f,v=>CarMaterial.SetFloat("_Impact", v))
+                    .OnComplete(()=>DOVirtual.Float(1f,0f,0.1f,v=>CarMaterial.SetFloat("_Impact", v)));
                 var c = other.GetComponentInParent<Collectable>();
                 other.enabled=false;
                 c?.Collect();
