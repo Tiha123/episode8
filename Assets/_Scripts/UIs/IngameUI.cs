@@ -26,8 +26,8 @@ public class IngameUI : MonoBehaviour
     }
     void Start()
     {
-        tmDistance.text = $"{0} m";
-        tmInformation.gameObject.SetActive(false);
+        // tmDistance.text = $"{0} m";
+        // ShowInfo("Test",1.5f);
     }
     void Update()
     {
@@ -51,22 +51,15 @@ public class IngameUI : MonoBehaviour
         ((long)GameManager.MoveDistance).ToStringKilo(out string intPart, out string decPart, out string unitPart);
         tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
     }
-
-    public void ShowInfo(string info, float duration = 1f)
+    public void ShowInfo(string info, float duration)
     {
-        tmInformation.transform.localScale = Vector3.zero;
-        if (_seqInfo != null)
+        if(feedbackInformation.IsPlaying==true)
         {
-            _seqInfo.Kill(true);
+            feedbackInformation.StopFeedbacks();
         }
-        _seqInfo = DOTween.Sequence();
-        _seqInfo.AppendCallback(() => tmInformation.gameObject.SetActive(true));
-        _seqInfo.AppendCallback(() => tmInformation.text = info);
-        _seqInfo.Append(tmInformation.rectTransform.DOScale(1.2f, duration * 0.1f));
-        _seqInfo.Append(tmInformation.rectTransform.DOScale(1f, duration * 0.2f));
-        _seqInfo.AppendInterval(duration * 0.4f);
-        _seqInfo.Append(tmInformation.rectTransform.DOScale(0f, duration * 0.5f));
-        _seqInfo.AppendCallback(() => tmInformation.gameObject.SetActive(false));
+        tmInformation.text=info;
+        feedbackInformation.GetFeedbackOfType<MMF_Pause>().PauseDuration=duration;
+        feedbackInformation?.PlayFeedbacks();
     }
     private uint _coinPrev = 0;
     void UpdateCoins()
@@ -91,9 +84,7 @@ public class IngameUI : MonoBehaviour
     {
         if (GameManager.life <= 0)
         {
-            tmInformation.gameObject.SetActive(true);
-            tmInformation.rectTransform.DOScale(1f,0.5f);
-            tmInformation.text = "Game Over!";
+            ShowInfo("Game Over", 3f);
             GameManager.IsGameOver=true;
         }
         if (_lifePrev == GameManager.life)

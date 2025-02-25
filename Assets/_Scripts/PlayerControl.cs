@@ -81,7 +81,7 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)&&GameManager.IsGameOver==true)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             GameManager.IsPlaying = !GameManager.IsPlaying;
             GameManager.life=3;

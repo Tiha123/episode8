@@ -142,11 +142,10 @@ public class TrackManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         for(int i=Countdown;i>=1;--i)
         {
-            gameUI.ShowInfo($"{i}", 1f);
+            gameUI.ShowInfo($"{i}",1f);
             yield return new WaitForSeconds(1f);
         }
-        gameUI.ShowInfo($"Game Start!", 1f);
-        //gameUI.ShowInfo("Start!");
+        gameUI.ShowInfo($"Game Start!", 2f);
         GameManager.IsPlaying=true;
     }
 
