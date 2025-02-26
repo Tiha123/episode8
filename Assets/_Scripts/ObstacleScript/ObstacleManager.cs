@@ -89,7 +89,7 @@ public class ObstacleManager : MonoBehaviour
     {
         int rndLane = Random.Range(0, trackmgr.laneList.Count);
         // int rndType = Random.Range((int)ObstacleType.Single, (int)ObstacleType._MAX);
-        Obstacle obstacle = rdm.GetRandom(false).GetItem() as Obstacle;
+        Obstacle obstacle = rdm.GetRandom().GetItem() as Obstacle;
         // List<Obstacle> obstacles = rndType switch
         // {
         //     (int)ObstacleType.Single => obstacleSingle,

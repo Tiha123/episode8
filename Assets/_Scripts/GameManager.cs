@@ -9,4 +9,5 @@ public static class GameManager
     public static uint Coin=0;
 
     public static int life=3;
+
 }

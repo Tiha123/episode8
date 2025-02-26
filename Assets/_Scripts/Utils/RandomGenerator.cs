@@ -23,7 +23,7 @@ public class RandomGenerator
             });
     }
 
-    public RandomItem GetRandom(bool deb)
+    public RandomItem GetRandom()
     {
         int rnd = Random.Range(0,totalweight);
         int weightSum=0;

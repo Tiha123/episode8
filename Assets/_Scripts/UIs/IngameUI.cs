@@ -82,7 +82,7 @@ public class IngameUI : MonoBehaviour
     private int _lifePrev = 3;
     void UpdateLife()
     {
-        if (GameManager.life <= 0)
+        if (GameManager.life <= 0&&GameManager.IsGameOver==false)
         {
             ShowInfo("Game Over", 3f);
             GameManager.IsGameOver=true;
@@ -93,7 +93,6 @@ public class IngameUI : MonoBehaviour
         }
         tmlife.text = $"{GameManager.life}/{3}";
         _lifePrev = GameManager.life;
-        
     }
 
     string FormattedFloat(float value)

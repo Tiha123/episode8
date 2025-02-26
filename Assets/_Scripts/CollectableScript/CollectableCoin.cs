@@ -7,11 +7,11 @@ public class CollectableCoin : Collectable
     public uint addVal = 1;
     [SerializeField] Transform pivot;
     [SerializeField] MMF_Player feedbackdisappear;
-    public override void SetLandPosition(int laneNum, float zpos, TrackManager trackmgr)
+    public override void SetLandPosition(int laneNum,float laneY, float zpos, TrackManager trackmgr)
     {
         laneNum = Mathf.Clamp(laneNum, 0, trackmgr.laneList.Count - 1);
         Transform laneTransform = trackmgr.laneList[laneNum];
-        Vector3 spawnPosition = new Vector3(laneTransform.position.x, laneTransform.position.y, zpos);
+        Vector3 spawnPosition = new Vector3(laneTransform.position.x, laneTransform.position.y+laneY, zpos);
         transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
     public override void Collect()

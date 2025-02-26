@@ -52,8 +52,6 @@ public class ObstacleTCompose : ObstacleDCompose
     private ObstacleSingle GetRandomPrefab(List<ObstacleSingle> prefabs)
     {
         int rnd = Random.Range(0, prefabs.Count);
-        Debug.Log(prefabs.Count);
-        Debug.Log(rnd);
         ObstacleSingle result = prefabs[rnd];
         return result;
     }

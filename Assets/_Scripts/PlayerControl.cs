@@ -84,6 +84,7 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameManager.IsPlaying = !GameManager.IsPlaying;
+            GameManager.IsGameOver = !GameManager.IsGameOver;
             GameManager.life=3;
         }
         if (GameManager.IsPlaying == false)
@@ -205,6 +206,7 @@ public class PlayerControl : MonoBehaviour
                 float a=trackmgr.scrollspeed;
                 feedbackCrash?.PlayFeedbacks();
                 GameManager.life--;
+                other.enabled=false;
                 if (GameManager.life<=0)
                 {
                     GameManager.IsPlaying = false;
