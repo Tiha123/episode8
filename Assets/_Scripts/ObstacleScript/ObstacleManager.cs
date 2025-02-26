@@ -8,7 +8,7 @@ public class ObstaclePool : RandomItem
 {
     public List<Obstacle> obstacleList;
 
-    public override Object GetItem()
+    public override object GetItem()
     {
         if (obstacleList==null || obstacleList.Count<=0)
             return null;

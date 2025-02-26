@@ -7,7 +7,7 @@ using System.Collections;
 public class CollectablePool : RandomItem
 {
     public Collectable collectable;
-    public override Object GetItem()
+    public override object GetItem()
     {
         if (collectable == null)
             return null;
@@ -15,21 +15,23 @@ public class CollectablePool : RandomItem
     }
 }
 
-// [System.Serializable]
-// public class LanePool : RandomItem
-// {
-//     public Lane lane;
-//     public override Object GetItem()
-//     {
-//         if (lane == null)
-//             return null;
-//         return lane;
-//     }
-// }
+[System.Serializable]
+public class LanePool : RandomItem
+{
+    public string lane;
+    public override object GetItem()
+    {
+        if (lane == null)
+            return null;
+        return lane;
+    }
+}
 
 public class CollectableManager : MonoBehaviour
 {
+    RandomGenerator collectableGenerator = new RandomGenerator();
     public List<CollectablePool> collectablePools;
+    public List<LanePool> lanepatternPools;
     [SerializeField, AsRange(0, 100)] Vector2 spawnInterval;
     [SerializeField] float spawnZpos = 18f;
     [SerializeField, AsRange(1, 30)] Vector2 spawnquota;
@@ -37,7 +39,6 @@ public class CollectableManager : MonoBehaviour
     [Space(20)]
     TrackManager trackmgr;
     LaneGenerator laneGen;
-    RandomGenerator rdm = new RandomGenerator();
 
     void Awake()
     {
@@ -48,12 +49,12 @@ public class CollectableManager : MonoBehaviour
     {
         collectablePools.ForEach(pools =>
         {
-            rdm.AddItem(pools);
+            collectableGenerator.AddItem(pools);
         });
 
         trackmgr = FindFirstObjectByType<TrackManager>();
         yield return new WaitForEndOfFrame();
-        laneGen = new LaneGenerator(spawnquota, trackmgr.laneList.Count);
+        laneGen = new LaneGenerator(spawnquota, trackmgr.laneList.Count, lanepatternPools);
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
         StartCoroutine(SpawnInfinite());
     }
@@ -81,7 +82,7 @@ public class CollectableManager : MonoBehaviour
         {
             return;
         }
-        if (rndcollectable != null)
+        if (rndcollectable != null&&laneCurrent.currentLane!=-1)
         {
             Collectable o = Instantiate(rndcollectable, t.collectableRoot);
             o.SetLandPosition(laneCurrent.currentLane, laneCurrent.currentY, spawnZpos, trackmgr);
@@ -92,7 +93,7 @@ public class CollectableManager : MonoBehaviour
     {
 
         LaneData rndLane = laneGen.GetNextLane();
-        Collectable collectable = rdm.GetRandom().GetItem() as Collectable;
+        Collectable collectable = collectableGenerator.GetRandom().GetItem() as Collectable;
         Collectable prefab;
         if (collectable != null)
         {

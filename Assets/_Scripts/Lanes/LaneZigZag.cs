@@ -15,6 +15,7 @@ public class LaneZigZag: Lane
     }
     public LaneData GetNextLane()
     {
+        data.currentY=0f;
         data.currentLane=(int)Mathf.PingPong(elapsed++, data.maxLane-1);
         return data;
     }
