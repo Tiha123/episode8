@@ -188,9 +188,10 @@ public class PlayerControl : MonoBehaviour
         float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
         mat.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
-
+    float _lastTriggerTime;
     void OnTriggerEnter(Collider other)
     {
+        if(Time.time-_lastTriggerTime<0.2f) return;
         if (other)
         {
             if (other.tag=="Collectable")
@@ -213,6 +214,7 @@ public class PlayerControl : MonoBehaviour
                 }
             }
         }
+        _lastTriggerTime=Time.time;
     }
 
 

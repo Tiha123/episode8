@@ -10,4 +10,6 @@ public static class GameManager
 
     public static int life=3;
 
+    public static float distanceFinish;
+
 }

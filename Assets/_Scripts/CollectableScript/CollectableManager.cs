@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CustomInspector;
 using System.Collections;
+using DG.Tweening;
 
 [System.Serializable]
 public class CollectablePool : RandomItem
@@ -105,8 +106,16 @@ public class CollectableManager : MonoBehaviour
         }
         if (prefab == null)
         {
-            return (new LaneData(), null);
+            return (new LaneData(-1), null);
         }
         return (rndLane, prefab);
+    }
+
+    public void SetPhase(Vector2 newInterval, Vector2 newQuota, List<int> newWeight)
+    {
+        int i=0;
+        DOVirtual.Vector2(spawnInterval, newInterval, 1f, i=>spawnInterval=i);
+        DOVirtual.Vector2(spawnquota, newQuota, 1f, i=>spawnquota=i);
+        collectableGenerator.AdjustWeight(newWeight);
     }
 }

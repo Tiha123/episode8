@@ -44,4 +44,18 @@ public class RandomGenerator
         items.Add(item);
         CalcTotalWeight();
     }
+
+    public void AdjustWeight(List<int> newList)
+    {
+        if(newList.Count!=items.Count)
+        {
+            return;
+        }
+        int i=0;
+        items?.ForEach(v=>
+            {
+                v.weight=newList[i];
+                i++;
+            });
+    }
 }

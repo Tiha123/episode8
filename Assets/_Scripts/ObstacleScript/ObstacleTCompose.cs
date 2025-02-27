@@ -9,7 +9,6 @@ public class ObstacleTCompose : ObstacleDCompose
     void Awake()
     {
         SafeOb = compositePrefabs.FindAll(f => f.thisType != SingleType.BlockAll);
-        Debug.Log(SafeOb.Count);
     }
     protected override void SpawnComposited()
     {

@@ -7,10 +7,10 @@ public struct LaneData
 
     public float currentY;
 
-    public LaneData(int current=-1, int zero=0)
+    public LaneData(int current=-1)
     {
         maxLane=current;
         currentLane=current;
-        currentY=zero;
+        currentY=0;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CustomInspector;
+using DG.Tweening;
 
 [System.Serializable]
 public class ObstaclePool : RandomItem
@@ -114,4 +115,11 @@ public class ObstacleManager : MonoBehaviour
         }
         return (rndLane, prefab);
     }
+
+    public void SetPhase(Vector2 newInterval, List<int> newWeight)
+    {
+        DOVirtual.Vector2(spawnIntervalo, newInterval, 1f, i=>spawnIntervalo=i);
+        rdm.AdjustWeight(newWeight);
+    }
+
 }

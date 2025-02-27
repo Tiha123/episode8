@@ -5,18 +5,18 @@ public class LaneGenerator
 {
     private List<Lane> lanePatterns = new List<Lane>();
     public Lane currentPattern;
+    public RandomGenerator rdm=new RandomGenerator();
     private Vector2 limitQuotaVec;
     private int limitQuota;
-    private int currentQuota=0;
+    private int currentQuota;
     private int laneCout;
     private System.Random random=new System.Random();
-    public List<RandomItem> items=new List<RandomItem> ();
-    public RandomGenerator rdm=new RandomGenerator();
 
     public int totalweight;
     public LaneGenerator(Vector2 quota, int lanecount, List<LanePool> lanepools)
     {
         limitQuotaVec=quota;
+        currentQuota=0;
 
         limitQuota=random.Next((int)limitQuotaVec.x,(int)limitQuotaVec.y);
         lanePatterns.Add(new LaneStraight());
@@ -41,13 +41,18 @@ public class LaneGenerator
         {
             SwitchPattern();
         }
+
         if (currentPattern == null)
         {
-            return new LaneData();
+            LaneData nullData=new LaneData(-1);
+            return nullData;
         }
-        return currentPattern.GetNextLane();
+        else
+        {
+            return currentPattern.GetNextLane();
+        }
     }
-    public void SwitchPattern(int index = -1)
+    public void SwitchPattern()
     {
         // -1: 랜덤
         //index = Random.Range(0, lanePatterns.Count);
@@ -62,4 +67,5 @@ public class LaneGenerator
         currentPattern?.Initialize(laneCout);
         currentQuota=0;
     }
+    
 }
