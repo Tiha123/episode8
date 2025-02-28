@@ -50,8 +50,6 @@ public class TrackManager : MonoBehaviour
         {
             gameUI=UIs[0] as IngameUI;
         }
-        IngameUI gameUIAny=FindAnyObjectByType<IngameUI>();
-        IngameUI gameUIFirst=FindFirstObjectByType<IngameUI>();
         camTransform = Camera.main.transform;
         curveAmount = Shader.PropertyToID("_CurveAmount");
         SpawnInitialTrack();
@@ -68,6 +66,7 @@ public class TrackManager : MonoBehaviour
         }
         // ScrollTrack();
         GameManager.MoveDistance+=scrollspeed*Time.smoothDeltaTime;
+        SpawnFinishZone(18f);
         RepositionTrack();
         BendTrack();
     }
@@ -126,8 +125,11 @@ public class TrackManager : MonoBehaviour
     void BendTrack()
     {
         elapsedTime+=Time.deltaTime;
+
         TrackCurveParamX = Mathf.Lerp(-CurveAmplitudeX, CurveAmplitudeX, Mathf.PerlinNoise1D(elapsedTime * CurveFrequencyX));
+
         TrackCurveParamY = Mathf.Lerp(-CurveAmplitudeY, CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * CurveFrequencyY));
+
         TrackMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
 
@@ -161,29 +163,39 @@ public class TrackManager : MonoBehaviour
         temp.trackmgr = this;
     }
 
-    public void SetPhase(PhaseProfile phase)
+    public void SetPhase(PhaseSO phase)
     {
-        DOVirtual.Float(scrollspeed,phase.speed,1f,s=>scrollspeed=s);
+        DOVirtual.Float(scrollspeed,phase.speed,1f,s=>scrollspeed=s).SetEase(Ease.InOutSine);
     }
 
     void SpawnStartZone(float zpos=3f)
     {
         Track T = GetTrackByZ(zpos);
+
         GameObject o = Instantiate(TrackStart, T.ObstacleRoot);
+
         Vector3 spawnPosition = new Vector3(0f,0f,3f);
+
         o.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
     GameObject _finishZone;
-    void SpawnFinishZone(float zpos)
+    void SpawnFinishZone(float zpos=18f)
     {
         if(_finishZone!=null)
         {
             return;
         }
+        if (GameManager.MoveDistance + zpos < GameManager.distanceFinish)
+        {
+            return;
+        }
 
         Track T =GetTrackByZ(zpos);
+        
         _finishZone = Instantiate(TrackFinish, T.ObstacleRoot);
+
         Vector3 spawnPosition = new Vector3(0f,0f,zpos);
+        
         _finishZone.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
 }

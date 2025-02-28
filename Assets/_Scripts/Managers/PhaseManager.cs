@@ -9,12 +9,11 @@ public class PhaseManager : MonoBehaviour
     [HorizontalLine("기본속성"), HideField] public bool _l0;
     [SerializeField] float updateInterval=1f;
     [HorizontalLine("트랙속성"), HideField] public bool _l1;
+    [SerializeField,Foldout] List<PhaseSO> phaseProfiles=new List<PhaseSO>();
 
-    [SerializeField] List<PhaseProfile> phaseProfiles=new List<PhaseProfile>();
+    public List<PhaseSO> distances=> phaseProfiles; // 읽기전용 외부변수
 
-    public List<PhaseProfile> distances=> phaseProfiles; // 읽기전용 외부변수
-
-    [SerializeField] PhaseProfile phaseNow;
+    PhaseSO phaseNow;
 
     private IngameUI uiIngame;
 
@@ -27,12 +26,13 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        GetFinishLine();
         uiIngame=FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
         trackmrg=FindFirstObjectByType<TrackManager>(FindObjectsInactive.Include);
         obstmrg=FindFirstObjectByType<ObstacleManager>(FindObjectsInactive.Include);
         collmrg=FindFirstObjectByType<CollectableManager>(FindObjectsInactive.Include);
-        yield return new WaitUntil(()=>uiIngame!=null);
+        GetFinishLine();
+        uiIngame.setDistance(distances);
+        yield return new WaitUntil(()=>GameManager.IsGameOver);
         StartCoroutine(IntervalUpdate());
     }
 
@@ -52,7 +52,13 @@ public class PhaseManager : MonoBehaviour
             if (GameManager.MoveDistance>phaseNow.Distance)
             {
                 i++;
-                SetPhase();
+                SetPhase(phaseNow);
+            }
+
+            if (i >= distances.Count)
+            {
+                GameClear(phaseNow);
+                yield break;
             }
 
         yield return new WaitForSeconds(updateInterval);
@@ -60,18 +66,26 @@ public class PhaseManager : MonoBehaviour
         }
     }
 
-    void SetPhase()
+    void GetFinishLine()
+    {
+        PhaseSO phaseFinish=phaseProfiles.LastOrDefault();
+
+        GameManager.distanceFinish=phaseFinish.Distance;
+    }
+    void SetPhase(PhaseSO phaseNow)
     {
         uiIngame?.SetPhase(phaseNow);
         obstmrg?.SetPhase(phaseNow);
         collmrg?.SetPhase(phaseNow);
+        trackmrg?.SetPhase(phaseNow);
     }
 
-
-    void GetFinishLine()
+    void GameClear(PhaseSO phase)
     {
-        PhaseProfile phaseFinish=phaseProfiles.LastOrDefault();
+        SetPhase(phase);
 
-        GameManager.distanceFinish=phaseFinish.Distance;
+        GameManager.IsPlaying = false;
+        GameManager.IsGameOver = true;
     }
+
 }

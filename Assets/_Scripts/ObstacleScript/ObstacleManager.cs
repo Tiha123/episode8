@@ -19,8 +19,8 @@ public class ObstaclePool : RandomItem
 
 public class ObstacleManager : MonoBehaviour
 {
-    public List<ObstaclePool> obstaclePools;
-    [SerializeField, AsRange(0,100)] Vector2 spawnIntervalo;
+    [SerializeField, Foldout] ObstacleSO obstacleSO;
+    [SerializeField, AsRange(0,100), ReadOnly] Vector2 spawnIntervalo;
     [SerializeField] float spawnZpos = 18f;
 
     [Space(20)]
@@ -35,7 +35,8 @@ public class ObstacleManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        obstaclePools.ForEach(pools =>
+        trackmgr=FindFirstObjectByType<TrackManager>();
+        obstacleSO.obstaclePools.ForEach(pools =>
         {
             rdm.AddItem(pools);
         });
@@ -46,9 +47,10 @@ public class ObstacleManager : MonoBehaviour
         // }
         // trackmgr = tm[0];
 
-        trackmgr=FindFirstObjectByType<TrackManager>();
+
         yield return new WaitForEndOfFrame();
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
+
         StartCoroutine(SpawnInfinite());
     }
 
@@ -116,10 +118,24 @@ public class ObstacleManager : MonoBehaviour
         return (rndLane, prefab);
     }
 
-    public void SetPhase(PhaseProfile phase)
+    public void SetPhase(PhaseSO phase)
     {
-        DOVirtual.Vector2(spawnIntervalo, phase.obstacleInterval, 1f, i=>spawnIntervalo=i);
-        rdm.AdjustWeight(phase.obstacleWeightList);
+        if(phase.obstacleData==null)
+        {
+            Clear();
+            return;
+        }
+        DOVirtual.Vector2(spawnIntervalo, phase.obstacleData.obstacleInterval, 1f, i=>spawnIntervalo=i);
+        rdm.Clear();
+        phase.obstacleData.obstaclePools.ForEach(pools =>
+        {
+            rdm.AddItem(pools);
+        });
+    }
+
+    public void Clear()
+    {
+        
     }
 
 }

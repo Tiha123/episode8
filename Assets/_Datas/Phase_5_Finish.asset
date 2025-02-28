@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
+  m_Name: Phase_5_Finish
+  m_EditorClassIdentifier: 
+  profileName: Phase0
+  Icon: {fileID: 21300000, guid: f2faab10d27524461a7795d50716ffcc, type: 3}
+  Distance: 0
+  speed: 0
+  obstacleInterval: {x: 0, y: 0}
+  collectableInterval: {x: 0, y: 0}
+  collectableQuota: {x: 0, y: 0}
+  obstacleWeightList: 
+  collectableWeightList: 
+  patternWeightList: 

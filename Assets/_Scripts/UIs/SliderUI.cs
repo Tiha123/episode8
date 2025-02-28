@@ -5,10 +5,6 @@ using System.Collections.Generic;
 
 public class SliderUI : MonoBehaviour
 {
-    public Slider slider;
-    public Image handleIcon;
-
-    RectTransform sliderRect;
     [Serializable] public struct Icons
     {
         public Image image;
@@ -21,9 +17,13 @@ public class SliderUI : MonoBehaviour
         }
     }
 
-    [SerializeField] List<Icons> icons=new List<Icons>();
+    [SerializeField] Slider slider;
+    [SerializeField] Image handleIcon;
 
     [SerializeField] List<Image> imagepools=new List<Image>();
+    [SerializeField] List<Icons> icons=new List<Icons>();
+
+    RectTransform sliderRect;
 
     void Start()
     {
@@ -40,10 +40,14 @@ public class SliderUI : MonoBehaviour
             elapsed=0f;
         }
     }
-
+    int _imagenum=0;
     public void AddIcon(Sprite sprite, float value)
     {
-        var image=imagepools.Find(i=>i.gameObject.activeSelf==false);
+        if (sprite==null)
+        {
+            return;
+        }
+        Image image=imagepools[_imagenum++ % imagepools.Count];
 
         if (image!=null)
         {
@@ -54,6 +58,7 @@ public class SliderUI : MonoBehaviour
         image.sprite=sprite;
 
         icons.Add(new Icons(image, value));
+
         SetPosition(image,value);
     }
 

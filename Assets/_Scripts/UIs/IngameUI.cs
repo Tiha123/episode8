@@ -1,45 +1,36 @@
-using System;
-using System.Collections.Generic;
-using CustomInspector;
-using DG.Tweening;
-using MoreMountains.Feedbacks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using DG.Tweening;
+using CustomInspector;
+using MoreMountains.Feedbacks;
+using System.Collections.Generic;
 
 public class IngameUI : MonoBehaviour
 {
-    
+
     [HorizontalLine("정보출력")]
     [SerializeField] TextMeshProUGUI tmInformation;
     [SerializeField] MMF_Player feedbackInformation;
-    
-    [HorizontalLine]
-    [SerializeField] TextMeshProUGUI tmCoin;
-    [SerializeField] TextMeshProUGUI tmDistance;
+
 
     [HorizontalLine]
+    [SerializeField] TextMeshProUGUI tmDistance;
     [SerializeField] Slider sliderDistance;
     [SerializeField] SliderUI sliderDistanceUI;
-    
+
+
     [HorizontalLine]
     [SerializeField] TextMeshProUGUI tmlife;
+    [SerializeField] TextMeshProUGUI tmCoin;
 
-
-    
-    Sequence _seqInfo;
     Sequence _seqCoin;
-    string Dist;
 
     void Awake()
     {
         tmInformation.text = "";
     }
-    void Start()
-    {
-        // tmDistance.text = $"{0} m";
-        // ShowInfo("Test",1.5f);
-    }
+
     void Update()
     {
         UpdateDistance();
@@ -47,14 +38,24 @@ public class IngameUI : MonoBehaviour
         UpdateLife();
     }
 
-    public void SetPhase(PhaseProfile phase)
+    public void setDistance(List<PhaseSO> phase)
+    {
+        phase.ForEach(v => sliderDistanceUI.AddIcon(v.Icon, (float)v.Distance / GameManager.distanceFinish));
+    }
+    public void SetPhase(PhaseSO phase)
     {
         ShowInfo(phase.profileName, 3f);
     }
 
-    public void setDistance(List<PhaseProfile> phase)
+    public void ShowInfo(string info, float duration)
     {
-        phase.ForEach(v=>sliderDistanceUI.AddIcon(v.Icon,v.Distance));
+        if (feedbackInformation.IsPlaying == true)
+        {
+            feedbackInformation.StopFeedbacks();
+        }
+        tmInformation.text = info;
+        feedbackInformation.GetFeedbackOfType<MMF_Pause>().PauseDuration = duration;
+        feedbackInformation?.PlayFeedbacks();
     }
 
     void UpdateDistance()
@@ -65,23 +66,16 @@ public class IngameUI : MonoBehaviour
         }
         if (GameManager.MoveDistance < 1000f)
         {
-            int intPortion = (int)GameManager.MoveDistance;
+            long intPortion = (long)GameManager.MoveDistance;
             int floatPortion = (int)((GameManager.MoveDistance - intPortion) * 10);
             tmDistance.text = $"{intPortion}.<size=80%>{floatPortion}</size>";
         }
-        ((long)GameManager.MoveDistance).ToStringKilo(out string intPart, out string decPart, out string unitPart);
-        tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
-        sliderDistance.value=(float) GameManager.MoveDistance/(float) GameManager.distanceFinish;
-    }
-    public void ShowInfo(string info, float duration)
-    {
-        if(feedbackInformation.IsPlaying==true)
+        else
         {
-            feedbackInformation.StopFeedbacks();
+            ((long)GameManager.MoveDistance).ToStringKilo(out string intPart, out string decPart, out string unitPart);
+            tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
         }
-        tmInformation.text=info;
-        feedbackInformation.GetFeedbackOfType<MMF_Pause>().PauseDuration=duration;
-        feedbackInformation?.PlayFeedbacks();
+        sliderDistance.value = (float)(GameManager.MoveDistance / GameManager.distanceFinish);
     }
     private uint _coinPrev = 0;
     void UpdateCoins()
@@ -104,10 +98,10 @@ public class IngameUI : MonoBehaviour
     private int _lifePrev = 3;
     void UpdateLife()
     {
-        if (GameManager.life <= 0&&GameManager.IsGameOver==false)
+        if (GameManager.life <= 0 && GameManager.IsGameOver == false)
         {
             ShowInfo("Game Over", 3f);
-            GameManager.IsGameOver=true;
+            GameManager.IsGameOver = true;
         }
         if (_lifePrev == GameManager.life)
         {
