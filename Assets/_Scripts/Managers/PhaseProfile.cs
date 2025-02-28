@@ -1,12 +1,14 @@
 using UnityEngine;
 using CustomInspector;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [System.Serializable]
     public struct PhaseProfile
     {
         [Space(10)]
         public string profileName;
+        [Preview(Size.small)]public Sprite Icon;
         public float Distance;
         public float speed;
 

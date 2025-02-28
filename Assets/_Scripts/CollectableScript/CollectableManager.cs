@@ -111,11 +111,10 @@ public class CollectableManager : MonoBehaviour
         return (rndLane, prefab);
     }
 
-    public void SetPhase(Vector2 newInterval, Vector2 newQuota, List<int> newWeight)
+    public void SetPhase(PhaseProfile phase)
     {
-        int i=0;
-        DOVirtual.Vector2(spawnInterval, newInterval, 1f, i=>spawnInterval=i);
-        DOVirtual.Vector2(spawnquota, newQuota, 1f, i=>spawnquota=i);
-        collectableGenerator.AdjustWeight(newWeight);
+        DOVirtual.Vector2(spawnInterval, phase.collectableInterval, 1f, i=>spawnInterval=i);
+        DOVirtual.Vector2(spawnquota, phase.collectableQuota, 1f, i=>spawnquota=i);
+        collectableGenerator.AdjustWeight(phase.collectableWeightList);
     }
 }

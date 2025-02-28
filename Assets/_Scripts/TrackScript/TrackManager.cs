@@ -161,9 +161,9 @@ public class TrackManager : MonoBehaviour
         temp.trackmgr = this;
     }
 
-    void SetPhase(float newspeed)
+    public void SetPhase(PhaseProfile phase)
     {
-        DOVirtual.Float(scrollspeed,newspeed,1f,s=>scrollspeed=s);
+        DOVirtual.Float(scrollspeed,phase.speed,1f,s=>scrollspeed=s);
     }
 
     void SpawnStartZone(float zpos=3f)

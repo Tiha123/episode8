@@ -116,10 +116,10 @@ public class ObstacleManager : MonoBehaviour
         return (rndLane, prefab);
     }
 
-    public void SetPhase(Vector2 newInterval, List<int> newWeight)
+    public void SetPhase(PhaseProfile phase)
     {
-        DOVirtual.Vector2(spawnIntervalo, newInterval, 1f, i=>spawnIntervalo=i);
-        rdm.AdjustWeight(newWeight);
+        DOVirtual.Vector2(spawnIntervalo, phase.obstacleInterval, 1f, i=>spawnIntervalo=i);
+        rdm.AdjustWeight(phase.obstacleWeightList);
     }
 
 }

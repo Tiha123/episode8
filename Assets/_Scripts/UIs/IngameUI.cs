@@ -1,21 +1,32 @@
+using System;
+using System.Collections.Generic;
 using CustomInspector;
 using DG.Tweening;
 using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IngameUI : MonoBehaviour
 {
+    
     [HorizontalLine("정보출력")]
     [SerializeField] TextMeshProUGUI tmInformation;
     [SerializeField] MMF_Player feedbackInformation;
     
     [HorizontalLine]
-    [SerializeField] TextMeshProUGUI tmDistance;
-    [HorizontalLine]
     [SerializeField] TextMeshProUGUI tmCoin;
+    [SerializeField] TextMeshProUGUI tmDistance;
+
+    [HorizontalLine]
+    [SerializeField] Slider sliderDistance;
+    [SerializeField] SliderUI sliderDistanceUI;
+    
     [HorizontalLine]
     [SerializeField] TextMeshProUGUI tmlife;
+
+
+    
     Sequence _seqInfo;
     Sequence _seqCoin;
     string Dist;
@@ -36,6 +47,16 @@ public class IngameUI : MonoBehaviour
         UpdateLife();
     }
 
+    public void SetPhase(PhaseProfile phase)
+    {
+        ShowInfo(phase.profileName, 3f);
+    }
+
+    public void setDistance(List<PhaseProfile> phase)
+    {
+        phase.ForEach(v=>sliderDistanceUI.AddIcon(v.Icon,v.Distance));
+    }
+
     void UpdateDistance()
     {
         if (GameManager.IsPlaying == false)
@@ -50,6 +71,7 @@ public class IngameUI : MonoBehaviour
         }
         ((long)GameManager.MoveDistance).ToStringKilo(out string intPart, out string decPart, out string unitPart);
         tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
+        sliderDistance.value=(float) GameManager.MoveDistance/(float) GameManager.distanceFinish;
     }
     public void ShowInfo(string info, float duration)
     {

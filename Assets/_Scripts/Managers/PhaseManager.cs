@@ -12,6 +12,8 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] List<PhaseProfile> phaseProfiles=new List<PhaseProfile>();
 
+    public List<PhaseProfile> distances=> phaseProfiles; // 읽기전용 외부변수
+
     [SerializeField] PhaseProfile phaseNow;
 
     private IngameUI uiIngame;
@@ -60,7 +62,9 @@ public class PhaseManager : MonoBehaviour
 
     void SetPhase()
     {
-
+        uiIngame?.SetPhase(phaseNow);
+        obstmrg?.SetPhase(phaseNow);
+        collmrg?.SetPhase(phaseNow);
     }
 
 
