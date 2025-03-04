@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using MoreMountains.Feedbacks;
 
 public class CollectableCoin : Collectable

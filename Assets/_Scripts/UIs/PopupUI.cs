@@ -24,15 +24,29 @@ public class PopupUI : MonoBehaviour
         {
             if(quit.activeSelf==false)
             {
-                quitOpen.PlayFeedbacks();
-                dimmer.SetActive(true);
+                QuitOpen();
             }
             else if(quit.activeSelf==true)
             {
-                quitClose.PlayFeedbacks();
-                dimmer.SetActive(false);
+                QuitClose();
             }
         }
+    }
+
+    public void QuitOpen()
+    {
+        quitOpen.PlayFeedbacks();
+        GameManager.IsPlaying=false;
+        GameManager.IsUIOpen=true;
+        dimmer.SetActive(true);
+    }
+
+    public void QuitClose()
+    {
+        quitClose.PlayFeedbacks();
+        GameManager.IsPlaying=true;
+        GameManager.IsUIOpen=false;
+        dimmer.SetActive(false);
     }
 
     public void QuitOK()
@@ -42,12 +56,5 @@ public class PopupUI : MonoBehaviour
         #else
             Application.Quit();// 빌드
         #endif
-
     }
-    public void QuitCancel()
-    {
-        quitClose?.PlayFeedbacks();
-    }
-
-
 }

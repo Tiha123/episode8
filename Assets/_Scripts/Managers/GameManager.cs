@@ -2,7 +2,9 @@ public static class GameManager
 {
     public static bool IsPlaying = false;
 
-    public static bool IsGameOver=false;
+    public static bool IsGameOver = true;
+
+    public static bool IsUIOpen = false;
     
     public static float MoveDistance = 0;
 

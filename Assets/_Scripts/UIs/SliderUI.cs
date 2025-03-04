@@ -33,6 +33,10 @@ public class SliderUI : MonoBehaviour
     float elapsed = 0f;
     void Update()
     {
+        if (GameManager.IsPlaying == false || GameManager.IsGameOver == true || GameManager.IsUIOpen==true)
+        {
+            return;
+        }
         SetPosition(handleIcon, slider.normalizedValue);
         elapsed += Time.deltaTime;
         if (elapsed > 0.1f)

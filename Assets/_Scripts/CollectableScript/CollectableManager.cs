@@ -65,7 +65,7 @@ public class CollectableManager : MonoBehaviour
         float PrevDistance = GameManager.MoveDistance;
         while (true)
         {
-            yield return new WaitUntil(() => GameManager.IsPlaying);
+            yield return new WaitUntil(() => GameManager.IsPlaying==true && GameManager.IsUIOpen==false);
             Spawncollectable();
             yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(spawnInterval.x, spawnInterval.y));
             PrevDistance = GameManager.MoveDistance;

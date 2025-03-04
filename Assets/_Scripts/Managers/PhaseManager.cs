@@ -32,7 +32,7 @@ public class PhaseManager : MonoBehaviour
         collmrg=FindFirstObjectByType<CollectableManager>(FindObjectsInactive.Include);
         GetFinishLine();
         uiIngame.setDistance(distances);
-        yield return new WaitUntil(()=>GameManager.IsPlaying);
+        yield return new WaitUntil(()=>GameManager.IsPlaying == true && GameManager.IsGameOver==false);
         StartCoroutine(IntervalUpdate());
     }
 

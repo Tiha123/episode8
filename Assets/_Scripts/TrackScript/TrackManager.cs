@@ -18,7 +18,7 @@ public class TrackManager : MonoBehaviour
 
     [SerializeField, Range(1, 100)] int TrackCount = 3;
 
-    [Range(1,5)] public int Countdown =3;
+    [Range(1, 5)] public int Countdown = 3;
 
     [SerializeField] float trackThreshold = 5f;
 
@@ -42,11 +42,11 @@ public class TrackManager : MonoBehaviour
 
 
     int curveAmount;
-    [HideField] public float elapsedTime=0f;
+    [HideField] public float elapsedTime = 0f;
 
     void Start()
     {
-        Object gameUI=FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
+        gameUI = FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
         // Object[] UIs=FindObjectsByType<IngameUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         // if (UIs!=null||UIs.Length>0)
         // {
@@ -64,12 +64,12 @@ public class TrackManager : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.IsPlaying == false)
+        if (GameManager.IsPlaying == false || GameManager.IsGameOver == true || GameManager.IsUIOpen == true)
         {
             return;
         }
         // ScrollTrack();
-        GameManager.MoveDistance+=scrollspeed*Time.smoothDeltaTime;
+        GameManager.MoveDistance += scrollspeed * Time.smoothDeltaTime;
         SpawnFinishZone(18f);
         RepositionTrack();
         BendTrack();
@@ -128,7 +128,7 @@ public class TrackManager : MonoBehaviour
 
     void BendTrack()
     {
-        elapsedTime+=Time.deltaTime;
+        elapsedTime += Time.deltaTime;
 
         TrackCurveParamX = Mathf.Lerp(-CurveAmplitudeX, CurveAmplitudeX, Mathf.PerlinNoise1D(elapsedTime * CurveFrequencyX));
 
@@ -151,14 +151,23 @@ public class TrackManager : MonoBehaviour
     }
     IEnumerator CountdownTrack()
     {
-        yield return new WaitForEndOfFrame();
-        for(int i=Countdown;i>=1;--i)
+        while (true)
         {
-            gameUI.ShowInfo($"{i}",1f);
+            yield return new WaitUntil(() => GameManager.IsUIOpen == false);
+
+            gameUI.ShowInfo($"{Countdown--}", 1f);
             yield return new WaitForSeconds(1f);
+
+            if (Countdown <= 0f)
+            {
+                gameUI.ShowInfo($"Game Start!", 2f);
+                GameManager.IsPlaying = true;
+                GameManager.IsGameOver = false;
+                yield break;
+            }
+
+            yield return new WaitUntil(() => GameManager.IsUIOpen == false);
         }
-        gameUI.ShowInfo($"Game Start!", 2f);
-        GameManager.IsPlaying=true;
     }
 
     void SpawnPlayer()
@@ -169,23 +178,23 @@ public class TrackManager : MonoBehaviour
 
     public void SetPhase(PhaseSO phase)
     {
-        DOVirtual.Float(scrollspeed,phase.speed,1f,s=>scrollspeed=s).SetEase(Ease.InOutSine);
+        DOVirtual.Float(scrollspeed, phase.speed, 1f, s => scrollspeed = s).SetEase(Ease.InOutSine);
     }
 
-    void SpawnStartZone(float zpos=3f)
+    void SpawnStartZone(float zpos = 3f)
     {
         Track T = GetTrackByZ(zpos);
 
         GameObject o = Instantiate(TrackStart, T.ObstacleRoot);
 
-        Vector3 spawnPosition = new Vector3(0f,0f,zpos);
+        Vector3 spawnPosition = new Vector3(0f, 0f, zpos);
 
         o.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
     GameObject _finishZone;
-    void SpawnFinishZone(float zpos=18f)
+    void SpawnFinishZone(float zpos = 18f)
     {
-        if(_finishZone!=null)
+        if (_finishZone != null)
         {
             return;
         }
@@ -194,12 +203,12 @@ public class TrackManager : MonoBehaviour
             return;
         }
 
-        Track T =GetTrackByZ(zpos);
-        
+        Track T = GetTrackByZ(zpos);
+
         _finishZone = Instantiate(TrackFinish, T.ObstacleRoot);
 
-        Vector3 spawnPosition = new Vector3(0f,0f,zpos);
-        
+        Vector3 spawnPosition = new Vector3(0f, 0f, zpos);
+
         _finishZone.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }
 }

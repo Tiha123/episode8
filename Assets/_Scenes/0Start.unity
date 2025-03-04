@@ -3436,8 +3436,8 @@ MonoBehaviour:
           ConditionPropertyName: 
           EnumConditionPropertyName: 
           EnumConditions: 0000000000000000000000000000000000000000000000000000000000000000
-        RemapZero: 0
-        RemapOne: 1
+        RemapZero: 1
+        RemapOne: 0
         InstantAlpha: 0
 --- !u!1 &2130150858
 GameObject:

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using CustomInspector;
 using DG.Tweening;
-using Unity.Android.Gradle.Manifest;
 
 [System.Serializable]
 public class ObstaclePool : RandomItem
@@ -55,7 +54,7 @@ public class ObstacleManager : MonoBehaviour
         float PrevDistance = GameManager.MoveDistance;
         while (true)
         {
-            yield return new WaitUntil(() => GameManager.IsPlaying);
+            yield return new WaitUntil(() => GameManager.IsPlaying==true && GameManager.IsUIOpen==false);
             // if(GameManager.IsPlaying==false)
             // {
             //     yield return null;

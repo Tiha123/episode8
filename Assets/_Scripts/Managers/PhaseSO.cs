@@ -1,6 +1,5 @@
 using UnityEngine;
 using CustomInspector;
-using System.Collections.Generic;
 
 [CreateAssetMenu(fileName ="PhaseSO", menuName = "Scriptable Objects/PhaseSO")]
 public class PhaseSO : ScriptableObject

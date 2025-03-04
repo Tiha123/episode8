@@ -14,7 +14,7 @@ public class Track : MonoBehaviour
 
     void LateUpdate()
     {
-        if (GameManager.IsPlaying == false)
+        if (GameManager.IsPlaying == false || GameManager.IsGameOver == true || GameManager.IsUIOpen==true)
         {
             return;
         }
