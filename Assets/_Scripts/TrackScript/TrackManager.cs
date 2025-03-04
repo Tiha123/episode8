@@ -9,7 +9,6 @@ public class TrackManager : MonoBehaviour
 
     [SerializeField] Track TrackPrefab;
     [SerializeField] PlayerControl PlayerPrefab;
-    IngameUI gameUI;
 
     [SerializeField] List<Track> TrackList = new List<Track>();
 
@@ -35,6 +34,8 @@ public class TrackManager : MonoBehaviour
 
     Transform camTransform;
 
+    IngameUI gameUI;
+
     [HideField] public List<Transform> laneList;
 
     [SerializeField] Material TrackMaterial;
@@ -45,16 +46,19 @@ public class TrackManager : MonoBehaviour
 
     void Start()
     {
-        Object[] UIs=FindObjectsByType<IngameUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        if (UIs!=null||UIs.Length>0)
-        {
-            gameUI=UIs[0] as IngameUI;
-        }
+        Object gameUI=FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
+        // Object[] UIs=FindObjectsByType<IngameUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        // if (UIs!=null||UIs.Length>0)
+        // {
+        //     gameUI=UIs[0] as IngameUI;
+        // }
         camTransform = Camera.main.transform;
         curveAmount = Shader.PropertyToID("_CurveAmount");
+
         SpawnInitialTrack();
-        SpawnStartZone();
+        SpawnStartZone(3f);
         SpawnPlayer();
+
         StartCoroutine(CountdownTrack());
     }
 
@@ -174,7 +178,7 @@ public class TrackManager : MonoBehaviour
 
         GameObject o = Instantiate(TrackStart, T.ObstacleRoot);
 
-        Vector3 spawnPosition = new Vector3(0f,0f,3f);
+        Vector3 spawnPosition = new Vector3(0f,0f,zpos);
 
         o.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
     }

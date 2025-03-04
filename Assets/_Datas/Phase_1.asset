@@ -12,13 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
   m_Name: Phase_1
   m_EditorClassIdentifier: 
-  profileName: Phase0
-  Icon: {fileID: 21300000, guid: da4d5f92f6e0241b1b423bb51b9080c8, type: 3}
-  Distance: 0
+  displayName: 
+  icon: {fileID: 21300000, guid: 6a6dfe1730ee3447db797f7054eb0251, type: 3}
+  distance: 50
   speed: 0
-  obstacleInterval: {x: 0, y: 0}
-  collectableInterval: {x: 0, y: 0}
+  obstacleData: {fileID: 11400000, guid: 4050e2fb660735047aed17f7dad832f0, type: 2}
+  collectableInterval: {x: 0, y: 10}
   collectableQuota: {x: 0, y: 0}
-  obstacleWeightList: 
-  collectableWeightList: 
-  patternWeightList: 

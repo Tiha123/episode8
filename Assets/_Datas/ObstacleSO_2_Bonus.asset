@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99583987996c6c843a6cf0ea11ece9ac, type: 3}
+  m_Name: ObstacleSO_2_Bonus
+  m_EditorClassIdentifier: 
+  obstaclePools:
+  - name: ObstacleSingle
+    weight: 0
+    obstacleList:
+    - {fileID: -8435774823436879760, guid: 22c5275a969a1c64b8ba2c8aa66a9463, type: 3}
+    - {fileID: 4269322169512934641, guid: dfe91a7cb42906444aa0fb6239223c84, type: 3}
+    - {fileID: -354541813342667598, guid: 30e08f8bb74b02346a88799caadfff98, type: 3}
+    - {fileID: 516732715380378730, guid: e4e08b3523008114395bb9a7cedd51ab, type: 3}
+    - {fileID: -5885795233282686993, guid: 8de3ad16858b2f64b833b69deb6869e1, type: 3}
+    - {fileID: 1920920001856898484, guid: 2c15ebbc191109a40979c05f33a7e1e2, type: 3}
+  - name: ObstacleDouble
+    weight: 0
+    obstacleList:
+    - {fileID: -4566372714446188369, guid: 3e54dc92c452c044da3e0f1019118cbe, type: 3}
+  - name: ObstacleDCompose
+    weight: 0
+    obstacleList:
+    - {fileID: 8603073091834115577, guid: 8fca98cf4ca911847811d9b5b3f99dea, type: 3}
+  - name: ObstacleTriple
+    weight: 0
+    obstacleList:
+    - {fileID: 631418865858476609, guid: 6e668ffd2dda0024ea558f16e04d3f04, type: 3}
+  - name: ObstacleTCompose
+    weight: 0
+    obstacleList:
+    - {fileID: 5215698035188708702, guid: 54af886c0eedbfc4ab1366ee61913fb6, type: 3}
+  - name: None
+    weight: 1
+    obstacleList: []
+  obstacleInterval: {x: 0, y: 10}

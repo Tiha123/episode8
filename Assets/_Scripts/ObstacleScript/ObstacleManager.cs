@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CustomInspector;
 using DG.Tweening;
+using Unity.Android.Gradle.Manifest;
 
 [System.Serializable]
 public class ObstaclePool : RandomItem
@@ -36,10 +37,7 @@ public class ObstacleManager : MonoBehaviour
     IEnumerator Start()
     {
         trackmgr=FindFirstObjectByType<TrackManager>();
-        obstacleSO.obstaclePools.ForEach(pools =>
-        {
-            rdm.AddItem(pools);
-        });
+        
         // TrackManager[] tm = FindObjectsByType<TrackManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         // if (tm == null || tm.Length <= 0)
         // {
@@ -47,8 +45,6 @@ public class ObstacleManager : MonoBehaviour
         // }
         // trackmgr = tm[0];
 
-
-        yield return new WaitForEndOfFrame();
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
 
         StartCoroutine(SpawnInfinite());
@@ -65,13 +61,19 @@ public class ObstacleManager : MonoBehaviour
             //     yield return null;
             // }
             SpawnObstacle();
-            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(spawnIntervalo.x,spawnIntervalo.y));
+            float randomaaa=Random.Range(spawnIntervalo.x,spawnIntervalo.y);
+            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > randomaaa);
             PrevDistance = GameManager.MoveDistance;
         }
     }
 
     void SpawnObstacle()
     {
+        if(obstacleSO==null)
+        {
+            return;
+        }
+
         (int laneNum, Obstacle rndobstacle) = RandomLanePrefab();
 
 
@@ -125,17 +127,22 @@ public class ObstacleManager : MonoBehaviour
             Clear();
             return;
         }
-        DOVirtual.Vector2(spawnIntervalo, phase.obstacleData.obstacleInterval, 1f, i=>spawnIntervalo=i);
+
+        obstacleSO=phase.obstacleData;
         rdm.Clear();
-        phase.obstacleData.obstaclePools.ForEach(pools =>
+        obstacleSO.obstaclePools.ForEach(pools =>
         {
             rdm.AddItem(pools);
         });
+
+        DOVirtual.Vector2(spawnIntervalo, phase.obstacleData.obstacleInterval, 1f, i=>spawnIntervalo=i);
+
     }
 
     public void Clear()
     {
-        
+        rdm.Clear();
+        obstacleSO=null;
     }
 
 }

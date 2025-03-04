@@ -32,7 +32,7 @@ public class PhaseManager : MonoBehaviour
         collmrg=FindFirstObjectByType<CollectableManager>(FindObjectsInactive.Include);
         GetFinishLine();
         uiIngame.setDistance(distances);
-        yield return new WaitUntil(()=>GameManager.IsGameOver);
+        yield return new WaitUntil(()=>GameManager.IsPlaying);
         StartCoroutine(IntervalUpdate());
     }
 
@@ -49,10 +49,10 @@ public class PhaseManager : MonoBehaviour
         while (true)
         {
             phaseNow=phaseProfiles[i];
-            if (GameManager.MoveDistance>phaseNow.Distance)
+            if (GameManager.MoveDistance>phaseNow.distance)
             {
-                i++;
                 SetPhase(phaseNow);
+                i++;
             }
 
             if (i >= distances.Count)
@@ -70,7 +70,7 @@ public class PhaseManager : MonoBehaviour
     {
         PhaseSO phaseFinish=phaseProfiles.LastOrDefault();
 
-        GameManager.distanceFinish=phaseFinish.Distance;
+        GameManager.distanceFinish=phaseFinish.distance;
     }
     void SetPhase(PhaseSO phaseNow)
     {

@@ -40,11 +40,11 @@ public class IngameUI : MonoBehaviour
 
     public void setDistance(List<PhaseSO> phase)
     {
-        phase.ForEach(v => sliderDistanceUI.AddIcon(v.Icon, (float)v.Distance / GameManager.distanceFinish));
+        phase.ForEach(v => sliderDistanceUI.AddIcon(v.icon, (float)v.distance / GameManager.distanceFinish));
     }
     public void SetPhase(PhaseSO phase)
     {
-        ShowInfo(phase.profileName, 3f);
+        ShowInfo(phase.displayName, 3f);
     }
 
     public void ShowInfo(string info, float duration)

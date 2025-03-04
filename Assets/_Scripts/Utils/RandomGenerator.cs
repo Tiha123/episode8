@@ -47,6 +47,7 @@ public class RandomGenerator
 
     public void Clear()
     {
-        items=null;
+        items.Clear();
+        totalweight=0;
     }
 }
