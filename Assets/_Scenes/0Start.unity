@@ -258,7 +258,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1626876547}
         m_TargetAssemblyTypeName: PopupUI, Assembly-CSharp
-        m_MethodName: QuitCancel
+        m_MethodName: QuitClose
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
