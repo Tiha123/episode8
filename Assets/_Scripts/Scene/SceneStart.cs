@@ -7,6 +7,6 @@ public class SceneStart : MonoBehaviour
     {
         // Debug.Log("TapToStart");
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 }

@@ -181,7 +181,7 @@ public class TrackManager : MonoBehaviour
         DOVirtual.Float(scrollspeed, phase.speed, 1f, s => scrollspeed = s).SetEase(Ease.InOutSine);
     }
 
-    void SpawnStartZone(float zpos = 3f)
+    void SpawnStartZone(float zpos = 0f)
     {
         Track T = GetTrackByZ(zpos);
 

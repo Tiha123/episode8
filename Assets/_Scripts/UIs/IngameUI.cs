@@ -103,18 +103,17 @@ public class IngameUI : MonoBehaviour
     private int _lifePrev = 3;
     void UpdateLife()
     {
-        if (GameManager.life <= 0 && GameManager.IsGameOver == false)
-        {
-            ShowInfo("Game Over", 3f);
-            GameManager.IsPlaying = false;
-            GameManager.IsGameOver = true;
-            DOVirtual.DelayedCall(5f, ()=> SceneManager.LoadScene(0));
-        }
         if (_lifePrev == GameManager.life)
         {
             return;
         }
         tmlife.text = $"{GameManager.life}/{3}";
+        if (GameManager.life <= 0 && GameManager.IsGameOver == false)
+        {
+            ShowInfo("Game Over", 3f);
+            GameManager.IsGameOver = true;
+            DOVirtual.DelayedCall(5f, ()=> SceneManager.LoadScene(0));
+        }
         _lifePrev = GameManager.life;
     }
 

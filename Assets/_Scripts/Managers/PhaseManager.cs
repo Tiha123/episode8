@@ -9,11 +9,11 @@ using UnityEngine.SceneManagement;
 public class PhaseManager : MonoBehaviour
 {
     [HorizontalLine("기본속성"), HideField] public bool _l0;
-    [SerializeField] float updateInterval=1f;
+    [SerializeField] float updateInterval = 1f;
     [HorizontalLine("트랙속성"), HideField] public bool _l1;
-    [SerializeField,Foldout] List<PhaseSO> phaseProfiles=new List<PhaseSO>();
+    [SerializeField, Foldout] List<PhaseSO> phaseProfiles = new List<PhaseSO>();
 
-    public List<PhaseSO> distances=> phaseProfiles; // 읽기전용 외부변수
+    public List<PhaseSO> distances => phaseProfiles; // 읽기전용 외부변수
 
     PhaseSO phaseNow;
 
@@ -28,30 +28,36 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        uiIngame=FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
-        trackmrg=FindFirstObjectByType<TrackManager>(FindObjectsInactive.Include);
-        obstmrg=FindFirstObjectByType<ObstacleManager>(FindObjectsInactive.Include);
-        collmrg=FindFirstObjectByType<CollectableManager>(FindObjectsInactive.Include);
+        GameManager.Reset();
+
+        uiIngame = FindFirstObjectByType<IngameUI>(FindObjectsInactive.Include);
+        yield return new WaitUntil(() => uiIngame != null);
+        trackmrg = FindFirstObjectByType<TrackManager>(FindObjectsInactive.Include);
+        yield return new WaitUntil(() => trackmrg != null);
+        obstmrg = FindFirstObjectByType<ObstacleManager>(FindObjectsInactive.Include);
+        yield return new WaitUntil(() => obstmrg != null);
+        collmrg = FindFirstObjectByType<CollectableManager>(FindObjectsInactive.Include);
+        yield return new WaitUntil(() => collmrg != null);
         GetFinishLine();
         uiIngame.setDistance(distances);
-        yield return new WaitUntil(()=>GameManager.IsPlaying == true && GameManager.IsGameOver==false);
+        yield return new WaitUntil(() => GameManager.IsPlaying == true && GameManager.IsGameOver == false);
         StartCoroutine(IntervalUpdate());
     }
 
 
     IEnumerator IntervalUpdate()
     {
-        if (phaseProfiles==null||phaseProfiles.Count<=0)
+        if (phaseProfiles == null || phaseProfiles.Count <= 0)
         {
             yield break;
         }
 
-        int i=0;
+        int i = 0;
 
         while (true)
         {
-            phaseNow=phaseProfiles[i];
-            if (GameManager.MoveDistance>phaseNow.distance)
+            phaseNow = phaseProfiles[i];
+            if (GameManager.MoveDistance > phaseNow.distance)
             {
                 SetPhase(phaseNow);
                 i++;
@@ -64,16 +70,16 @@ public class PhaseManager : MonoBehaviour
                 yield break;
             }
 
-        yield return new WaitForSeconds(updateInterval);
+            yield return new WaitForSeconds(updateInterval);
 
         }
     }
 
     void GetFinishLine()
     {
-        PhaseSO phaseFinish=phaseProfiles.LastOrDefault();
+        PhaseSO phaseFinish = phaseProfiles.LastOrDefault();
 
-        GameManager.distanceFinish=phaseFinish.distance;
+        GameManager.distanceFinish = phaseFinish.distance;
     }
     void SetPhase(PhaseSO phaseNow)
     {
@@ -89,5 +95,6 @@ public class PhaseManager : MonoBehaviour
         uiIngame.ShowInfo("Game Clear!", 2f);
         GameManager.IsPlaying = false;
         GameManager.IsGameOver = true;
+        DOVirtual.DelayedCall(5f, ()=> SceneManager.LoadScene(0));
     }
 }

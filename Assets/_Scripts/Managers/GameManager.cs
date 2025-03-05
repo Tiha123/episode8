@@ -16,9 +16,19 @@ public static class GameManager
 
     public static PlayerState playerstate;
 
-    public static void reset()
+    public static void Reset()
     {
+        IsPlaying = false;
+        IsGameOver = true;
+        IsUIOpen = false;
+
+        MoveDistance = 0;
+        distanceFinish = 0;
+        Coin = 0;
+        life = 3;
         
+        playerstate = 0;
     }
+
 
 }

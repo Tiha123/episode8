@@ -42,6 +42,7 @@ public class CollectableManager : MonoBehaviour
     [Space(20)]
     TrackManager trackmgr;
     LaneGenerator laneGen;
+    int lanecount;
 
     void Awake()
     {
@@ -55,10 +56,9 @@ public class CollectableManager : MonoBehaviour
         {
             collectableGenerator.AddItem(pools);
         });
-
         trackmgr = FindFirstObjectByType<TrackManager>();
-        yield return new WaitForEndOfFrame();
-        laneGen = new LaneGenerator(collectableData.spawnquota, trackmgr.laneList.Count, collectableData.lanepatternPools);
+        lanecount=trackmgr.laneList.Count;
+        laneGen = new LaneGenerator(collectableData.spawnquota, lanecount, collectableData.lanepatternPools);
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
         StartCoroutine(SpawnInfinite());
     }
@@ -69,7 +69,6 @@ public class CollectableManager : MonoBehaviour
         while (true)
         {
             yield return new WaitUntil(() => GameManager.IsPlaying==true && GameManager.IsUIOpen==false);
-
             yield return new WaitUntil(() => collectableData!=null);
             Spawncollectable();
             yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(collectableData.spawnInterval.x, collectableData.spawnInterval.y));
@@ -122,15 +121,17 @@ public class CollectableManager : MonoBehaviour
 
     public void SetPhase(PhaseSO phase)
     {
-        if(collectableData==null)
+        if(phase.collectableSO==null)
         {
             Clear();
             return;
         }
+
         collectableData=phase.collectableSO;
         collectableGenerator.Clear();
+
         collectableData.collectablePools.ForEach(v=>collectableGenerator.AddItem(v));
-        laneGen = new LaneGenerator(collectableData.spawnquota, trackmgr.laneList.Count, collectableData.lanepatternPools);
+        laneGen = new LaneGenerator(collectableData.spawnquota, lanecount, collectableData.lanepatternPools);
         DOVirtual.Vector2(spawnInterval, phase.collectableSO.spawnInterval, 1f, i=>spawnInterval=i);
     }
 
