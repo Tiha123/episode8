@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LaneZigZag: Lane
 {
-    public string Name => "ZigZagPattern";
+    public LaneType lanetype => LaneType.LaneZigZag;
     LaneData data;
     public float ampX=0.8f; //진폭
     public float freq=2.5f;

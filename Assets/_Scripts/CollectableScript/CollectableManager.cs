@@ -19,23 +19,25 @@ public class CollectablePool : RandomItem
 [System.Serializable]
 public class LanePool : RandomItem
 {
-    public string lane;
+    public LaneType pattertype;
     public override object GetItem()
     {
-        if (lane == null)
-            return null;
-        return lane;
+        return pattertype;
     }
 }
 
 public class CollectableManager : MonoBehaviour
 {
     RandomGenerator collectableGenerator = new RandomGenerator();
-    public List<CollectablePool> collectablePools;
-    public List<LanePool> lanepatternPools;
-    [SerializeField, AsRange(0, 100)] Vector2 spawnInterval;
+    
+
+    [SerializeField] CollectableSO collectableData;
+    
     [SerializeField] float spawnZpos = 18f;
-    [SerializeField, AsRange(1, 30)] Vector2 spawnquota;
+
+    [SerializeField, AsRange(0, 100)] public Vector2 spawnInterval;
+    [SerializeField, AsRange(1, 30)] public Vector2 spawnquota;
+    
 
     [Space(20)]
     TrackManager trackmgr;
@@ -48,14 +50,15 @@ public class CollectableManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        collectablePools.ForEach(pools =>
+        yield return new WaitUntil(() => collectableData!=null);
+        collectableData.collectablePools.ForEach(pools =>
         {
             collectableGenerator.AddItem(pools);
         });
 
         trackmgr = FindFirstObjectByType<TrackManager>();
         yield return new WaitForEndOfFrame();
-        laneGen = new LaneGenerator(spawnquota, trackmgr.laneList.Count, lanepatternPools);
+        laneGen = new LaneGenerator(collectableData.spawnquota, trackmgr.laneList.Count, collectableData.lanepatternPools);
         yield return new WaitUntil(() => GameManager.IsPlaying == true);
         StartCoroutine(SpawnInfinite());
     }
@@ -66,14 +69,20 @@ public class CollectableManager : MonoBehaviour
         while (true)
         {
             yield return new WaitUntil(() => GameManager.IsPlaying==true && GameManager.IsUIOpen==false);
+
+            yield return new WaitUntil(() => collectableData!=null);
             Spawncollectable();
-            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(spawnInterval.x, spawnInterval.y));
+            yield return new WaitUntil(() => (GameManager.MoveDistance - PrevDistance) > Random.Range(collectableData.spawnInterval.x, collectableData.spawnInterval.y));
             PrevDistance = GameManager.MoveDistance;
         }
     }
 
     void Spawncollectable()
     {
+        if(collectableData==null)
+        {
+            return;
+        }
         (LaneData laneCurrent, Collectable rndcollectable) = RandomLanePrefab();
 
 
@@ -113,7 +122,21 @@ public class CollectableManager : MonoBehaviour
 
     public void SetPhase(PhaseSO phase)
     {
-        DOVirtual.Vector2(spawnInterval, phase.collectableInterval, 1f, i=>spawnInterval=i);
-        DOVirtual.Vector2(spawnquota, phase.collectableQuota, 1f, i=>spawnquota=i);
+        if(collectableData==null)
+        {
+            Clear();
+            return;
+        }
+        collectableData=phase.collectableSO;
+        collectableGenerator.Clear();
+        collectableData.collectablePools.ForEach(v=>collectableGenerator.AddItem(v));
+        laneGen = new LaneGenerator(collectableData.spawnquota, trackmgr.laneList.Count, collectableData.lanepatternPools);
+        DOVirtual.Vector2(spawnInterval, phase.collectableSO.spawnInterval, 1f, i=>spawnInterval=i);
+    }
+
+    void Clear()
+    {
+        collectableGenerator.Clear();
+        collectableData=null;
     }
 }

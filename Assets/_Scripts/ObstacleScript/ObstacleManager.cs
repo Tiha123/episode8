@@ -35,6 +35,7 @@ public class ObstacleManager : MonoBehaviour
 
     IEnumerator Start()
     {
+        yield return new WaitUntil(() => obstacleSO!=null);
         trackmgr=FindFirstObjectByType<TrackManager>();
         
         // TrackManager[] tm = FindObjectsByType<TrackManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);

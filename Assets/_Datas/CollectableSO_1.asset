@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
-  m_Name: Phase_5_Finish
+  m_Script: {fileID: 11500000, guid: a56d707696ca6c34d8739f40eb60dddf, type: 3}
+  m_Name: CollectableSO_1
   m_EditorClassIdentifier: 
-  displayName: Finish
-  icon: {fileID: 21300000, guid: 3bc47353e5a3641b0afc1e095f939ffc, type: 3}
-  distance: 500
-  speed: 0
-  obstacleData: {fileID: 0}
-  collectableSO: {fileID: 0}
+  collectablePools: []
+  spawnInterval: {x: 0, y: 0}
+  spawnquota: {x: 0, y: 0}

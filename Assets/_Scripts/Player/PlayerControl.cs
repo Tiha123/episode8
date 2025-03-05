@@ -3,6 +3,8 @@ using Deform;
 using DG.Tweening;
 using MoreMountains.Feedbacks;
 using UnityEngine;
+public enum PlayerMove { Idle = 0, Move = 1, Jump = 2, Slide = 3 };
+public enum PlayerState { INVINCIBLE = 1 << 0, MAGNETIC = 1 << 1};
 
 public class PlayerControl : MonoBehaviour
 {
@@ -34,9 +36,8 @@ public class PlayerControl : MonoBehaviour
     [HideInInspector] public TrackManager trackmgr;
     Vector3 pos;
 
-    public enum PlayerState { Idle = 0, Move = 1, Jump = 2, Slide = 3 };
 
-    public PlayerState state = PlayerState.Idle;
+    public PlayerMove move = PlayerMove.Idle;
 
     [SerializeField] Material CarMaterial;
     [SerializeField] Material CollectMaterial;
@@ -44,16 +45,17 @@ public class PlayerControl : MonoBehaviour
     [Space(20)]
     [SerializeField] MMF_Player feedbackImpact;
     [SerializeField] MMF_Player feedbackCrash;
+    [SerializeField] MMF_Player feedbackInvincible;
 
     void Start()
     {
         currentLane = trackmgr.laneList.Count / 2;
         curveAmount = Shader.PropertyToID("_CurveAmount");
-        CollidersList.ForEach(p=>
+        CollidersList.ForEach(p =>
         {
             p.gameObject.SetActive(false);
         });
-        SwitchState(state, out state, PlayerState.Idle);
+        SwitchState(move, out move, PlayerMove.Idle);
         BendThings(CarMaterial);
         BendThings(CollectMaterial);
     }
@@ -81,17 +83,7 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameManager.IsPlaying = !GameManager.IsPlaying;
-            GameManager.IsGameOver = !GameManager.IsGameOver;
-            GameManager.life=3;
-        }
-        if (GameManager.IsPlaying == false)
-        {
-            return;
-        }
-        if (pivot == null)
+        if (pivot == null || GameManager.IsPlaying == false || GameManager.IsGameOver == true)
         {
             return;
         }
@@ -118,7 +110,7 @@ public class PlayerControl : MonoBehaviour
 
     void HandlePlayer(int direction)
     {
-        if (state == PlayerState.Jump || state == PlayerState.Slide) return;
+        if (move == PlayerMove.Jump || move == PlayerMove.Slide) return;
         currentLane += direction;
         if (currentLane < 0 || currentLane > trackmgr.laneList.Count - 1)
         {
@@ -127,7 +119,7 @@ public class PlayerControl : MonoBehaviour
         }
         else
         {
-            SwitchState(state, out state, PlayerState.Move);
+            SwitchState(move, out move, PlayerMove.Move);
 
             var squash = direction switch
             {
@@ -139,13 +131,13 @@ public class PlayerControl : MonoBehaviour
             if (seqMove != null)
             {
                 seqMove.Kill(true);
-                SwitchState(state, out state, PlayerState.Move);
+                SwitchState(move, out move, PlayerMove.Move);
             }
 
             currentLane = Mathf.Clamp(currentLane, 0, trackmgr.laneList.Count - 1);
             pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
             seqMove = DOTween.Sequence().OnComplete(() => squash.Factor = 0);
-            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => SwitchState(state, out state, PlayerState.Idle)));
+            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => SwitchState(move, out move, PlayerMove.Idle)));
             seqMove.Join(DOVirtual.Float(0f, 1f, moveDuration / 2, (v) => squash.Factor = v));
             seqMove.Insert(moveDuration / 2, DOVirtual.Float(1f, 0f, moveDuration / 2, (v) => squash.Factor = v));
         }
@@ -153,29 +145,29 @@ public class PlayerControl : MonoBehaviour
 
     void HandleJump()
     {
-        if (state != PlayerState.Idle) return;
-        SwitchState(state, out state, PlayerState.Jump);
+        if (move != PlayerMove.Idle) return;
+        SwitchState(move, out move, PlayerMove.Jump);
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
         seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase));
         seqJump.Join(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
         seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
         seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
-        seqJump.InsertCallback(jumpDuration, () => SwitchState(state, out state, PlayerState.Idle));
+        seqJump.InsertCallback(jumpDuration, () => SwitchState(move, out move, PlayerMove.Idle));
     }
 
     void HandleSlide()
     {
-        if (state != PlayerState.Idle) return;
-        SwitchState(state, out state, PlayerState.Slide);
+        if (move != PlayerMove.Idle) return;
+        SwitchState(move, out move, PlayerMove.Slide);
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
         seqJump.Append(DOVirtual.Float(0f, -1f, slideDuration / 2, (v) => slideDeform.Factor = v));
         seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v));
-        seqJump.InsertCallback(slideDuration, () => SwitchState(state, out state, PlayerState.Idle));
+        seqJump.InsertCallback(slideDuration, () => SwitchState(move, out move, PlayerMove.Idle));
 
     }
 
-    void SwitchState(PlayerState pState, out PlayerState outState, PlayerState changeState)
+    void SwitchState(PlayerMove pState, out PlayerMove outState, PlayerMove changeState)
     {
         CollidersList[(int)pState].gameObject.SetActive(false);
         CollidersList[(int)changeState].gameObject.SetActive(true);
@@ -188,35 +180,48 @@ public class PlayerControl : MonoBehaviour
         float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
         mat.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
-    float _lastTriggerTime;
+
     void OnTriggerEnter(Collider other)
     {
-        if(Time.time-_lastTriggerTime<0.2f) return;
         if (other)
         {
-            if (other.tag=="Collectable")
+            if (other.tag == "Collectable")
             {
                 feedbackImpact?.PlayFeedbacks();
                 var c = other.GetComponentInParent<Collectable>();
-                other.enabled=false;
+                other.enabled = false;
                 c?.Collect();
 
             }
-            else if(other.tag=="Obstacle")
+            else if (other.tag == "Obstacle"&&!GameManager.playerstate.HasAny(PlayerState.INVINCIBLE))
             {
-                float a=trackmgr.scrollspeed;
                 feedbackCrash?.PlayFeedbacks();
-                GameManager.life--;
-                other.enabled=false;
-                if (GameManager.life<=0)
-                {
-                    GameManager.IsPlaying = false;
-                }
+                feedbackInvincible?.PlayFeedbacks();
             }
+            other.enabled = false;
         }
-        _lastTriggerTime=Time.time;
     }
 
+    public void OnInvincible(bool b)
+    {
+        if(b)
+        {
+            GameManager.playerstate|=PlayerState.INVINCIBLE;//추가
+        }
+        else
+        {
+            GameManager.playerstate&= ~PlayerState.INVINCIBLE;//제거
+        }
+    }
+
+    public void OnCrash(bool b)
+    {
+        GameManager.IsPlaying=!b;
+        if (b)
+        {
+            GameManager.life--;
+        }
+    }
 
 
 

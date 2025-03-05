@@ -57,9 +57,10 @@ public class LaneGenerator
         // -1: 랜덤
         //index = Random.Range(0, lanePatterns.Count);
         //Lane lane = lanePatterns[index];
-        string patterName=rdm.GetRandom().GetItem() as string;
+        LaneType lanetype=(LaneType)rdm.GetRandom().GetItem();
 
-        Lane lane=lanePatterns.Find(f=>f.Name==patterName);
+
+        Lane lane=lanePatterns.Find(f=>f.lanetype==lanetype);
 
         limitQuota=random.Next((int)limitQuotaVec.x,(int)limitQuotaVec.y);
 

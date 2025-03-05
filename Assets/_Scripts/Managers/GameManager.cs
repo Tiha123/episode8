@@ -14,4 +14,11 @@ public static class GameManager
 
     public static float distanceFinish;
 
+    public static PlayerState playerstate;
+
+    public static void reset()
+    {
+        
+    }
+
 }

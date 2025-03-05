@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LaneWave : Lane
 {
-    public string Name => "WavePattern";
+    public LaneType lanetype => LaneType.LaneWave;
     LaneData data;
     public float ampY=1.5f; //진폭
     public float freq=2.5f;

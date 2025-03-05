@@ -5,6 +5,7 @@ using DG.Tweening;
 using CustomInspector;
 using MoreMountains.Feedbacks;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class IngameUI : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class IngameUI : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.IsPlaying == false || GameManager.IsGameOver == true || GameManager.IsUIOpen==true)
+        if (GameManager.IsGameOver == true || GameManager.IsUIOpen==true)
         {
             return;
         }
@@ -72,12 +73,12 @@ public class IngameUI : MonoBehaviour
         {
             long intPortion = (long)GameManager.MoveDistance;
             int floatPortion = (int)((GameManager.MoveDistance - intPortion) * 10);
-            tmDistance.text = $"{intPortion}.<size=80%>{floatPortion}</size>";
+            tmDistance.text = $"{intPortion}.<size=80%>{floatPortion} m</size>";
         }
         else
         {
             ((long)GameManager.MoveDistance).ToStringKilo(out string intPart, out string decPart, out string unitPart);
-            tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} m</size>";
+            tmDistance.text = $"{intPart}<size=70%>{decPart}{unitPart} km</size>";
         }
         sliderDistance.value = (float)(GameManager.MoveDistance / GameManager.distanceFinish);
     }
@@ -105,7 +106,9 @@ public class IngameUI : MonoBehaviour
         if (GameManager.life <= 0 && GameManager.IsGameOver == false)
         {
             ShowInfo("Game Over", 3f);
+            GameManager.IsPlaying = false;
             GameManager.IsGameOver = true;
+            DOVirtual.DelayedCall(5f, ()=> SceneManager.LoadScene(0));
         }
         if (_lifePrev == GameManager.life)
         {

@@ -10,8 +10,5 @@ public class PhaseSO : ScriptableObject
         public float distance;
         public float speed;
         public ObstacleSO obstacleData;
-
-        [Space(10)]
-        [AsRange(0, 100)] public Vector2 collectableInterval;
-        [AsRange(1, 30)] public Vector2 collectableQuota;
+        public CollectableSO collectableSO;
 }

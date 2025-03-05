@@ -118,10 +118,12 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _Fresnel: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Impact: 0
+    - _Invincible: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -141,8 +143,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _CurveAmount: {r: -1.6298938, g: -0.16933483, b: 0, a: 0}
+    - _CurveAmount: {r: 0.35097528, g: 0.1775533, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelColor: {r: 1, g: 0.023584902, b: 0.08089217, a: 0.6117647}
     - _ImpactColor: {r: 8, g: 6.3961554, b: 0, a: 0.5686275}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

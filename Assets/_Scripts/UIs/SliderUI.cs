@@ -26,7 +26,7 @@ public class SliderUI : MonoBehaviour
 
     RectTransform sliderRect;
 
-    void Start()
+    void Awake()
     {
         sliderRect = slider.GetComponent<RectTransform>();
     }
@@ -39,7 +39,7 @@ public class SliderUI : MonoBehaviour
         }
         SetPosition(handleIcon, slider.normalizedValue);
         elapsed += Time.deltaTime;
-        if (elapsed > 0.1f)
+        if (elapsed > 1f)
         {
             SetAllPosition();
             elapsed = 0f;

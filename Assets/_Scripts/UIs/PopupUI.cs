@@ -14,7 +14,6 @@ public class PopupUI : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
         quit.SetActive(false);
         dimmer.SetActive(false);
     }

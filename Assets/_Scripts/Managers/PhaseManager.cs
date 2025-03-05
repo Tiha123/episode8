@@ -3,6 +3,8 @@ using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -55,6 +57,7 @@ public class PhaseManager : MonoBehaviour
                 i++;
             }
 
+
             if (i >= distances.Count)
             {
                 GameClear(phaseNow);
@@ -83,9 +86,8 @@ public class PhaseManager : MonoBehaviour
     void GameClear(PhaseSO phase)
     {
         SetPhase(phase);
-
+        uiIngame.ShowInfo("Game Clear!", 2f);
         GameManager.IsPlaying = false;
         GameManager.IsGameOver = true;
     }
-
 }

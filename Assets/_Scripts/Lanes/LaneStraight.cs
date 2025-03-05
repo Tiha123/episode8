@@ -1,6 +1,6 @@
 public class LaneStraight : Lane
 {
-    public string Name => "StraightPattern";
+    public LaneType lanetype => LaneType.LaneStraight;
     private LaneData data;
     private System.Random random=new System.Random();
 
