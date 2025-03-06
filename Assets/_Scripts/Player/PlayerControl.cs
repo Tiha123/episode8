@@ -39,8 +39,6 @@ public class PlayerControl : MonoBehaviour
 
     public PlayerMove move = PlayerMove.Idle;
 
-    [SerializeField] Material CarMaterial;
-    [SerializeField] Material CollectMaterial;
     int curveAmount;
     [Space(20)]
     [SerializeField] MMF_Player feedbackImpact;
@@ -55,9 +53,7 @@ public class PlayerControl : MonoBehaviour
         {
             p.gameObject.SetActive(false);
         });
-        SwitchState(move, out move, PlayerMove.Idle);
-        BendThings(CarMaterial);
-        BendThings(CollectMaterial);
+        SwitchState(move, out move, PlayerMove.Idle);;
     }
 
     // void Update()
@@ -83,6 +79,12 @@ public class PlayerControl : MonoBehaviour
 
     void Update()
     {
+        #if UNITY_EDITOR
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GameManager.life=3;
+        }
+        #endif
         if (pivot == null || GameManager.IsPlaying == false || GameManager.IsGameOver == true)
         {
             return;
@@ -103,8 +105,6 @@ public class PlayerControl : MonoBehaviour
         {
             HandlePlayer(1);
         }
-        BendThings(CarMaterial);
-        BendThings(CollectMaterial);
     }
 
 
@@ -136,24 +136,28 @@ public class PlayerControl : MonoBehaviour
 
             currentLane = Mathf.Clamp(currentLane, 0, trackmgr.laneList.Count - 1);
             pos = new Vector3(trackmgr.laneList[currentLane].transform.position.x, pivot.position.y, pivot.position.z);
+            pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => SwitchState(move, out move, PlayerMove.Idle));
+
             seqMove = DOTween.Sequence().OnComplete(() => squash.Factor = 0);
-            seqMove.Append(pivot.DOMove(pos, moveDuration).SetEase(moveEase).OnComplete(() => SwitchState(move, out move, PlayerMove.Idle)));
-            seqMove.Join(DOVirtual.Float(0f, 1f, moveDuration / 2, (v) => squash.Factor = v));
-            seqMove.Insert(moveDuration / 2, DOVirtual.Float(1f, 0f, moveDuration / 2, (v) => squash.Factor = v));
+            seqMove.Append(DOVirtual.Float(0f, 1f, moveDuration / 2, (v) => squash.Factor = v));
+            seqMove.Append(DOVirtual.Float(1f, 0f, moveDuration / 2, (v) => squash.Factor = v));
         }
     }
 
     void HandleJump()
     {
         if (move != PlayerMove.Idle) return;
+
         SwitchState(move, out move, PlayerMove.Jump);
+
+        pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase).OnComplete(()=>SwitchState(move, out move, PlayerMove.Idle));
+
+
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
-        seqJump.Append(pivot.DOLocalJump(pos, jumpHeight, 1, jumpDuration).SetEase(jumpEase));
-        seqJump.Join(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
-        seqJump.Insert(jumpDuration / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
-        seqJump.Insert(jumpDuration / 2, DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
-        seqJump.Insert(jumpDuration * 3 / 4, DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
-        seqJump.InsertCallback(jumpDuration, () => SwitchState(move, out move, PlayerMove.Idle));
+        seqJump.Append(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
+        seqJump.Append(DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpUpDeform.Factor = v));
+        seqJump.Append(DOVirtual.Float(0f, 1f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
+        seqJump.Append(DOVirtual.Float(1f, 0f, jumpDuration / 4, (v) => jumpDownDeform.Factor = v));
     }
 
     void HandleSlide()
@@ -162,9 +166,7 @@ public class PlayerControl : MonoBehaviour
         SwitchState(move, out move, PlayerMove.Slide);
         seqJump = DOTween.Sequence().OnComplete(() => jumpUpDeform.Factor = 0).OnComplete(() => jumpDownDeform.Factor = 0);
         seqJump.Append(DOVirtual.Float(0f, -1f, slideDuration / 2, (v) => slideDeform.Factor = v));
-        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v));
-        seqJump.InsertCallback(slideDuration, () => SwitchState(move, out move, PlayerMove.Idle));
-
+        seqJump.Append(DOVirtual.Float(-1f, 0f, slideDuration / 2, (v) => slideDeform.Factor = v).OnComplete(()=>SwitchState(move, out move, PlayerMove.Idle)));
     }
 
     void SwitchState(PlayerMove pState, out PlayerMove outState, PlayerMove changeState)
@@ -172,13 +174,6 @@ public class PlayerControl : MonoBehaviour
         CollidersList[(int)pState].gameObject.SetActive(false);
         CollidersList[(int)changeState].gameObject.SetActive(true);
         outState = changeState;
-    }
-
-    void BendThings(Material mat)
-    {
-        float TrackCurveParamX = Mathf.Lerp(-trackmgr.CurveAmplitudeX, trackmgr.CurveAmplitudeX, Mathf.PerlinNoise1D(trackmgr.elapsedTime * trackmgr.CurveFrequencyX));
-        float TrackCurveParamY = Mathf.Lerp(-trackmgr.CurveAmplitudeY, trackmgr.CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * trackmgr.CurveFrequencyY));
-        mat.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
     }
 
     void OnTriggerEnter(Collider other)
@@ -213,14 +208,15 @@ public class PlayerControl : MonoBehaviour
             GameManager.playerstate&= ~PlayerState.INVINCIBLE;//제거
         }
     }
-
     public void OnCrash(bool b)
     {
-        GameManager.IsPlaying=!b;
+        
         if (b)
-        {
+        {   
             GameManager.life--;
         }
+        GameManager.IsPlaying= !b;
+
     }
 
 

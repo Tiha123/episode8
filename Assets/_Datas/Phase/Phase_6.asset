@@ -10,15 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
-  m_Name: Phase_4
+  m_Name: Phase_6
   m_EditorClassIdentifier: 
-  profileName: Phase0
-  Icon: {fileID: 21300000, guid: b6f0884c3ce9b46dd88295aa9c67dfcd, type: 3}
-  Distance: 0
-  speed: 0
-  obstacleInterval: {x: 0, y: 0}
-  collectableInterval: {x: 0, y: 0}
-  collectableQuota: {x: 0, y: 0}
-  obstacleWeightList: 
-  collectableWeightList: 
-  patternWeightList: 
+  displayName: Phase 5
+  icon: {fileID: 21300000, guid: 2a5788756fbbe42aab94ae15ff1fc94f, type: 3}
+  distance: 2400
+  speed: 10
+  obstacleData: {fileID: 11400000, guid: 0e79aeb2ffa06c340b7f51382295e16c, type: 2}
+  collectableSO: {fileID: 11400000, guid: 508e6e797b9c352489194598965c5165, type: 2}

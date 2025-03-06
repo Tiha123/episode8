@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
+  m_Name: Phase_2
+  m_EditorClassIdentifier: 
+  displayName: Phase 2
+  icon: {fileID: 21300000, guid: 400738b43e5444d989944cff9751ef69, type: 3}
+  distance: 500
+  speed: 14
+  obstacleData: {fileID: 11400000, guid: c585a867437d24a45b2681464a1a6acb, type: 2}
+  collectableSO: {fileID: 11400000, guid: 2187ef717d64ded41bf717b3067df2bb, type: 2}

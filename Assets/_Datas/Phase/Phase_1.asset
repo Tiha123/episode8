@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
-  m_Name: Phase_5_Finish
+  m_Name: Phase_1
   m_EditorClassIdentifier: 
-  displayName: Finish
-  icon: {fileID: 21300000, guid: 3bc47353e5a3641b0afc1e095f939ffc, type: 3}
-  distance: 500
-  speed: 0
-  obstacleData: {fileID: 0}
-  collectableSO: {fileID: 0}
+  displayName: Phase 1
+  icon: {fileID: 21300000, guid: 6a6dfe1730ee3447db797f7054eb0251, type: 3}
+  distance: 50
+  speed: 12
+  obstacleData: {fileID: 11400000, guid: 4050e2fb660735047aed17f7dad832f0, type: 2}
+  collectableSO: {fileID: 11400000, guid: ceb30bad932a30f41992945393f9f0d4, type: 2}

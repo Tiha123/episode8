@@ -21,7 +21,7 @@ public class ObstacleManager : MonoBehaviour
 {
     [SerializeField, Foldout] ObstacleSO obstacleSO;
     [SerializeField, AsRange(0,100), ReadOnly] Vector2 spawnIntervalo;
-    [SerializeField] float spawnZpos = 18f;
+    [SerializeField] float spawnZpos = 60f;
 
     [Space(20)]
     TrackManager trackmgr;

@@ -10,11 +10,11 @@ public class TrackManager : MonoBehaviour
     [SerializeField] Track TrackPrefab;
     [SerializeField] PlayerControl PlayerPrefab;
 
-    [SerializeField] List<Track> TrackList = new List<Track>();
+    [SerializeField, ReadOnly] List<Track> TrackList = new List<Track>();
 
     [SerializeField] GameObject TrackStart, TrackFinish;
 
-    [Range(0f, 50f)] public float scrollspeed = 10f;
+    [Range(0f, 50f), ReadOnly] public float scrollspeed = 10f;
 
     [SerializeField, Range(1, 100)] int TrackCount = 3;
 
@@ -30,15 +30,16 @@ public class TrackManager : MonoBehaviour
     [Range(0f, 0.5f)] public float CurveFrequencyY = 0.5f;
     [Range(0f, 10f)] public float CurveAmplitudeY = 0f;
 
+
     int nameindex = 0;
 
     Transform camTransform;
 
     IngameUI gameUI;
 
-    [HideField] public List<Transform> laneList;
+    [ReadOnly] public List<Transform> laneList;
 
-    [SerializeField] Material TrackMaterial;
+    [SerializeField] List<Material> curveMaterialList;
 
 
     int curveAmount;
@@ -56,8 +57,9 @@ public class TrackManager : MonoBehaviour
         curveAmount = Shader.PropertyToID("_CurveAmount");
 
         SpawnInitialTrack();
-        SpawnStartZone(3f);
+        SpawnStartZone(0f);
         SpawnPlayer();
+        BendThings(curveMaterialList);
 
         StartCoroutine(CountdownTrack());
     }
@@ -70,9 +72,9 @@ public class TrackManager : MonoBehaviour
         }
         // ScrollTrack();
         GameManager.MoveDistance += scrollspeed * Time.smoothDeltaTime;
-        SpawnFinishZone(18f);
+        SpawnFinishZone(60f);
         RepositionTrack();
-        BendTrack();
+        BendThings(curveMaterialList);
     }
 
     void SpawnInitialTrack()
@@ -83,7 +85,7 @@ public class TrackManager : MonoBehaviour
             Track temp = SpawnNextTrack(pos);
             pos = temp.ExitPoint.position;
         }
-        BendTrack();
+        BendThings(curveMaterialList);
     }
 
     // void ScrollTrack()
@@ -126,16 +128,6 @@ public class TrackManager : MonoBehaviour
         return temp;
     }
 
-    void BendTrack()
-    {
-        elapsedTime += Time.deltaTime;
-
-        TrackCurveParamX = Mathf.Lerp(-CurveAmplitudeX, CurveAmplitudeX, Mathf.PerlinNoise1D(elapsedTime * CurveFrequencyX));
-
-        TrackCurveParamY = Mathf.Lerp(-CurveAmplitudeY, CurveAmplitudeY, Mathf.PerlinNoise1D(TrackCurveParamX * CurveFrequencyY));
-
-        TrackMaterial.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f));
-    }
 
     public Track GetTrackByZ(float ZValue)
     {
@@ -210,5 +202,16 @@ public class TrackManager : MonoBehaviour
         Vector3 spawnPosition = new Vector3(0f, 0f, zpos);
 
         _finishZone.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
+    }
+
+    void BendThings(List<Material> mat)
+    {
+        elapsedTime += Time.deltaTime;
+
+        float TrackCurveParamX = Mathf.PerlinNoise1D(elapsedTime * CurveFrequencyX) * 2f - 1f;
+
+        float TrackCurveParamY = Mathf.PerlinNoise1D(TrackCurveParamX * CurveFrequencyY) * 2f - 1f;
+
+        mat.ForEach(v => v.SetVector(curveAmount, new Vector4(TrackCurveParamX, TrackCurveParamY, 0f, 0f)));
     }
 }

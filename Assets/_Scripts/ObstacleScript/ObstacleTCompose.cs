@@ -21,7 +21,6 @@ public class ObstacleTCompose : ObstacleDCompose
                 if (--blockcount < 1)
                 {
                     Singleprefab = GetRandomPrefab(SafeOb);
-                    Debug.Log("Active");
                 }
             }
             Spawn(Singleprefab, p);

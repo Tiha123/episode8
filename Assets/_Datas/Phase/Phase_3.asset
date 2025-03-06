@@ -10,15 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd97e62d04782d24685c4c455bf72e0e, type: 3}
-  m_Name: Phase_2
+  m_Name: Phase_3
   m_EditorClassIdentifier: 
-  profileName: Phase0
-  Icon: {fileID: 21300000, guid: 08e4fd9ce6df24563a21b5a187cfe30a, type: 3}
-  Distance: 0
-  speed: 0
-  obstacleInterval: {x: 0, y: 0}
-  collectableInterval: {x: 0, y: 0}
-  collectableQuota: {x: 0, y: 0}
-  obstacleWeightList: 
-  collectableWeightList: 
-  patternWeightList: 
+  displayName: Bonus Time
+  icon: {fileID: 21300000, guid: d25ec2633563f4de8b75de6c38ec1dbd, type: 3}
+  distance: 1000
+  speed: 10
+  obstacleData: {fileID: 11400000, guid: b3938d33423cbe94f87b67c52cc7ee12, type: 2}
+  collectableSO: {fileID: 11400000, guid: 051a3df74145d0f4997a89e33b94e0a7, type: 2}

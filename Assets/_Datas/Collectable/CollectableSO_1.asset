@@ -10,19 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a56d707696ca6c34d8739f40eb60dddf, type: 3}
-  m_Name: CollectableSO_0
+  m_Name: CollectableSO_1
   m_EditorClassIdentifier: 
   collectablePools:
-  - name: Coin
+  - name: 
     weight: 5
     collectable: {fileID: 8349586205819059475, guid: 761ab9bfb00a00143a8f67df8b9df95a, type: 3}
-  - name: Star
+  - name: 
     weight: 1
     collectable: {fileID: 8349586205819059475, guid: 8fbc0897ac6c6c84bb849bf92de6e2fd, type: 3}
   lanepatternPools:
-  - name: 
-    weight: 1
-    pattertype: 0
   - name: 
     weight: 2
     pattertype: 1
@@ -32,5 +29,8 @@ MonoBehaviour:
   - name: 
     weight: 2
     pattertype: 3
+  - name: 
+    weight: 1
+    pattertype: 0
   spawnInterval: {x: 5, y: 10}
-  spawnquota: {x: 4, y: 7}
+  spawnquota: {x: 3, y: 10}
